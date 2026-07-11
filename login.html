@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ChronoAI Login</title>
+
+    <link rel="stylesheet" href="css/login.css">
+
+</head>
+
+<body>
+
+<div class="background">
+
+    <div class="orb orb1"></div>
+
+    <div class="orb orb2"></div>
+
+    <div class="orb orb3"></div>
+
+</div>
+
+<div class="login-container">
+
+    <div class="login-card">
+
+        <h1>⏱ ChronoAI</h1>
+
+        <p id="loginSubtitle">Welcome Back</p>
+
+        <form id="loginForm">
+
+            <input
+                type="email"
+                id="email"
+                placeholder="Email Address"
+                autocomplete="email">
+
+            <div class="password-box">
+
+                <input
+                    id="password"
+                    type="password"
+                    placeholder="Password"
+                    autocomplete="current-password">
+
+                <span id="togglePassword">👁️</span>
+
+            </div>
+
+            <p id="loginError" class="error-message"></p>
+
+            <button type="submit" id="loginBtn">
+                Login
+            </button>
+
+            <div class="options">
+
+                <label>
+
+                    <input type="checkbox" id="rememberMe">
+
+                    Remember Me
+
+                </label>
+
+                <a href="#" id="forgotPasswordLink">
+                    Forgot Password?
+                </a>
+
+            </div>
+
+        </form>
+
+        <div class="divider">
+
+            OR
+
+        </div>
+
+        <button class="google" id="googleLoginBtn" type="button">
+
+            Continue with Google
+
+        </button>
+
+        <button class="github" id="githubLoginBtn" type="button">
+
+            Continue with GitHub
+
+        </button>
+
+        <p class="signup">
+
+            <span id="accountText">Don't have an account?</span>
+
+            <a href="#" id="accountLink">Create Account</a>
+
+        </p>
+
+    </div>
+
+</div>
+
+<!-- Forgot Password Modal -->
+
+<div class="reset-modal" id="resetModal">
+
+    <div class="reset-box">
+
+        <h2>Reset Password</h2>
+
+        <p>
+            Enter your registered email address.
+        </p>
+
+        <input
+            type="email"
+            id="resetEmail"
+            placeholder="Enter your email">
+
+        <p id="resetMessage" class="error-message"></p>
+
+        <div class="reset-actions">
+
+            <button type="button" id="sendResetBtn">
+                Send Reset Link
+            </button>
+
+            <button type="button" id="closeResetBtn">
+                Cancel
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Social Login Email Modal -->
+
+<div class="provider-modal" id="providerModal">
+
+    <div class="provider-box">
+
+        <button class="provider-close" id="closeProviderBtn">
+            ×
+        </button>
+
+        <div class="provider-icon" id="providerIcon">
+            G
+        </div>
+
+        <h2 id="providerTitle">
+            Continue with Google
+        </h2>
+
+        <p id="providerSubtitle">
+            Enter your email to continue securely.
+        </p>
+
+        <input
+            type="email"
+            id="providerEmail"
+            placeholder="Enter your email">
+
+        <p id="providerMessage" class="error-message"></p>
+
+        <button type="button" id="continueProviderBtn">
+            Continue
+        </button>
+
+    </div>
+
+</div>
+
+<script src="js/login.js"></script>
+
+</body>
+</html>

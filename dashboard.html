@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChronoAI Dashboard</title>
+<link rel="stylesheet" href="css/dashboard.css">
+</head>
+
+<body>
+
+<button class="mobile-menu-btn" onclick="toggleMobileSidebar()">
+    ☰
+</button>
+
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeMobileSidebar()"></div>
+
+    
+<div class="sidebar">
+
+    <h2>⏱ ChronoAI</h2>
+
+    <ul>
+
+    <li><a href="#dashboard">🏠 Dashboard</a></li>
+
+    <li><a href="profile.html">👤 Profile</a></li>
+    <li><a href="#analytics">📊 Analytics</a></li>
+
+    <li><a href="#tasks">📝 Tasks</a></li>
+
+    <li><a href="#notes">🗒 Notes</a></li>
+
+    <li><a href="#habits">🌱 Habit Tracker</a></li>
+
+    <li><a href="#planner">🤖 AI Planner</a></li>
+
+    <li><a href="#calendar-section">📅 Calendar</a></li>
+
+    <li><a href="#pomodoro">🍅 Pomodoro</a></li>
+
+    <li><a href="#stopwatch-section">⏱ Stopwatch</a></li>
+
+<li><a href="#alarm-section">⏰ Alarm</a></li>
+
+<li><a href="#" onclick="openSettings(event)">⚙️ Settings</a></li></ul>
+
+</div>
+
+<div class="main">
+
+    <div class="topbar">
+<h1>Good Evening, <span id="userName">User</span> 👋</h1>        <div id="clock">00:00:00</div>
+    </div>
+
+<div class="welcome-banner">
+
+    <div class="welcome-text">
+
+<h2>🚀 Welcome back, <span id="welcomeName">User</span></h2>
+        <p>
+            Stay focused, complete your goals and let ChronoAI
+            help you become more productive every day.
+        </p>
+
+    </div>
+
+    <div class="welcome-progress">
+
+        <h3>Today's Goal</h3>
+
+        <div class="goal-progress">
+
+            <div class="goal-fill"></div>
+
+        </div>
+
+        <span>80% Completed</span>
+
+    </div>
+
+</div>
+
+
+
+<div class="dashboard-stats">
+
+    <div class="stat-card">
+        <span>📋</span>
+        <h2 id="taskCount">0</h2>
+        <p>Total Tasks</p>
+    </div>
+
+    <div class="stat-card">
+        <span>✅</span>
+        <h2 id="completedCount">0</h2>
+        <p>Completed</p>
+    </div>
+
+    <div class="stat-card">
+        <span>🍅</span>
+       <h2 id="pomodoroCount">0</h2>
+        <p>Pomodoro Sessions</p>
+    </div>
+
+    <div class="stat-card">
+        <span>🔥</span>
+        <h2 id="streakCount">0</h2>
+        <p>Day Streak</p>
+    </div>
+
+</div>
+
+    <div class="cards">
+
+        <!-- Analytics -->
+
+        <div class="card" id="analytics">
+
+            <h2>📊 Productivity Analytics</h2>
+
+            <div class="progress-box">
+
+                <p>Today's Focus</p>
+
+                <div class="progress">
+
+                    <div class="progress-fill" style="width:80%"></div>
+
+                </div>
+
+                <span>80%</span>
+
+            </div>
+
+            <div class="progress-box">
+
+                <p>Weekly Goal</p>
+
+                <div class="progress">
+
+                    <div class="progress-fill" style="width:65%"></div>
+
+                </div>
+
+                <span>65%</span>
+
+            </div>
+
+        </div>
+
+        <!-- Productivity -->
+
+        <div class="card" id="dashboard">
+
+            <h2>Productivity</h2>
+
+            <h1>94%</h1>
+
+        </div>
+
+        
+        <!-- Task Manager -->
+
+        <div class="card" id="tasks">
+
+            <h2>📝 My Tasks</h2>
+
+            <input
+                type="text"
+                id="taskInput"
+                placeholder="Enter Task">
+
+            <select id="priority">
+
+                <option>High</option>
+                <option>Medium</option>
+                <option>Low</option>
+
+            </select>
+
+            <input
+                type="date"
+                id="dueDate">
+
+            <button onclick="addTask()">
+
+                Add Task
+
+            </button>
+
+            <ul id="taskList"></ul>
+
+        </div>
+
+        <!-- =========================
+        NOTES
+========================= -->
+
+<div class="card" id="notes">
+
+    <h2>🗒 Quick Notes</h2>
+
+    <textarea
+        id="notesInput"
+        placeholder="Write your important notes here..."></textarea>
+
+    <button onclick="saveNotes()">
+
+        Save Notes
+
+    </button>
+
+    <p id="notesStatus">
+
+        Notes are saved automatically.
+
+    </p>
+
+</div>
+
+        <!-- Habit Tracker -->
+
+        <div class="card" id="habits">
+
+            <h2>🌱 Habit Tracker</h2>
+
+            <div class="habit">
+                <input type="checkbox">
+                <span>Wake up before 7 AM</span>
+            </div>
+
+            <div class="habit">
+                <input type="checkbox">
+                <span>Exercise 30 Minutes</span>
+            </div>
+
+            <div class="habit">
+                <input type="checkbox">
+                <span>Read 20 Pages</span>
+            </div>
+
+            <div class="habit">
+                <input type="checkbox">
+                <span>Drink 3L Water</span>
+            </div>
+
+            <div class="habit">
+                <input type="checkbox">
+                <span>Complete Pomodoro Goal</span>
+            </div>
+
+            <br>
+
+            <h3>Today's Progress</h3>
+
+            <div class="habit-progress">
+
+                <div id="habitBar"></div>
+
+            </div>
+
+            <p id="habitText">0% Completed</p>
+
+        </div>
+
+       <!-- AI Assistant -->
+
+<div class="card ai-card" id="planner">
+
+    <div class="ai-header">
+
+        <h2>🤖 ChronoAI Assistant</h2>
+
+        <span class="ai-status">● Online</span>
+
+    </div>
+
+    <div class="chat-box" id="chatBox">
+
+        <div class="bot-message">
+
+👋 Hello <span id="chatUserName">User</span>! I'm your ChronoAI Assistant.
+            <br><br>
+
+            I can help you with:
+
+            <br>
+
+            • Study planning
+
+            <br>
+
+            • Productivity
+
+            <br>
+
+            • Time management
+
+            <br>
+
+            • Daily schedules
+
+        </div>
+
+    </div>
+
+    <div class="chat-input">
+
+        <input
+
+            type="text"
+
+            id="userMessage"
+
+            placeholder="Ask me anything...">
+
+        <button onclick="sendMessage()">
+
+            Send
+
+        </button>
+
+    </div>
+
+</div>
+
+    
+
+        <!-- ✅ FIXED CALENDAR -->
+
+        <div class="card" id="calendar-section">
+
+            <h2>📅 Calendar</h2>
+
+            <div class="calendar-header">
+
+                <button onclick="previousMonth()">◀</button>
+
+                <h3 id="monthYear"></h3>
+
+                <button onclick="nextMonth()">▶</button>
+
+            </div>
+
+            <div class="calendar-weekdays">
+
+                <div>Sun</div>
+                <div>Mon</div>
+                <div>Tue</div>
+                <div>Wed</div>
+                <div>Thu</div>
+                <div>Fri</div>
+                <div>Sat</div>
+
+            </div>
+
+            <div id="calendarDays" class="calendar-grid"></div>
+
+        </div>
+
+        <!-- Pomodoro -->
+
+        <div class="card" id="pomodoro">
+
+            <h2>🍅 Pomodoro Timer</h2>
+
+            <h1 id="timer">25:00</h1>
+
+            <div class="timer-buttons">
+
+                <button onclick="startTimer()">Start</button>
+
+                <button onclick="pauseTimer()">Pause</button>
+
+                <button onclick="resetTimer()">Reset</button>
+
+            </div>
+
+        </div>
+
+                <!-- Stopwatch -->
+
+        <div class="card" id="stopwatch-section">
+
+            <h2>⏱ Stopwatch</h2>
+
+            <h1 id="stopwatch">00:00:00</h1>
+
+            <div class="timer-buttons">
+
+                <button onclick="startStopwatch()">Start</button>
+
+                <button onclick="stopStopwatch()">Stop</button>
+
+                <button onclick="resetStopwatch()">Reset</button>
+
+            </div>
+
+        </div>
+
+<!-- Alarm & Reminder -->
+<div class="card alarm-card" id="alarm-section">
+    <div class="card-header">
+        <h3>⏰ Alarm & Reminder</h3>
+        <p>Create reminders and get notified on time.</p>
+    </div>
+
+    <div class="alarm-form">
+
+        <input type="text" id="reminderTitle" placeholder="Reminder title">
+
+        <input type="time" id="reminderTime">
+
+        <select id="reminderPriority">
+            <option value="Low">Low Priority</option>
+            <option value="Medium" selected>Medium Priority</option>
+            <option value="High">High Priority</option>
+        </select>
+
+        <button onclick="addReminder()">Add Reminder</button>
+
+    </div>
+
+    <div class="reminder-list" id="reminderList">
+        <!-- Reminders will appear here -->
+    </div>
+
+</div>
+
+    </div>
+
+</div>
+
+<!-- ==========================
+     PROFESSIONAL SETTINGS MODAL
+========================== -->
+
+<div class="portal-settings-modal" id="settingsModal">
+
+    <div class="portal-settings-panel">
+
+        <button class="portal-settings-close" onclick="closeSettings()">
+            ×
+        </button>
+
+        <div class="portal-settings-header">
+
+            <h2>⚙️ Settings</h2>
+
+            <p>
+                Manage your profile, theme, account, and portal preferences.
+            </p>
+
+        </div>
+
+        <!-- Profile Card -->
+        <div class="portal-profile-card">
+
+            <div class="portal-profile-avatar" id="settingsAvatar">
+                U
+            </div>
+
+            <div class="portal-profile-info">
+
+                <h3 id="settingsName">
+                    User
+                </h3>
+
+                <p id="settingsEmail">
+                    user@example.com
+                </p>
+
+                <div class="portal-plan-row">
+
+                    <span id="settingsPlan">
+                        Free Plan
+                    </span>
+
+                    <button onclick="openUpgradePlan()">
+                        Upgrade Plan
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+<!-- PAYMENT HISTORY CARD -->
+<div class="payment-history-card">
+
+    <div class="payment-history-header">
+        <div>
+            <h3>💳 Payment History</h3>
+            <p>Your current subscription and payment details.</p>
+        </div>
+
+        <span id="historyStatusBadge">Free</span>
+    </div>
+
+    <div class="payment-history-grid">
+
+        <div>
+            <span>Current Plan</span>
+            <strong id="historyPlan">Free Plan</strong>
+        </div>
+
+        <div>
+            <span>Payment Status</span>
+            <strong id="historyStatus">Not Paid</strong>
+        </div>
+
+        <div>
+            <span>Amount</span>
+            <strong id="historyAmount">₹0</strong>
+        </div>
+
+        <div>
+            <span>Payment ID</span>
+            <strong id="historyPaymentId">N/A</strong>
+        </div>
+
+    </div>
+
+</div>
+        
+        <!-- Settings Options -->
+        <div class="portal-settings-grid">
+
+            <div class="portal-setting-card">
+
+                <div>
+                    <h3>Account Type</h3>
+                    <p id="settingsProvider">Email Login</p>
+                </div>
+
+                <span class="portal-active-badge">
+                    Active
+                </span>
+
+            </div>
+
+            <div class="portal-setting-card">
+
+                <div>
+                    <h3>Theme Mode</h3>
+                    <p>Switch between dark and light dashboard mode.</p>
+                </div>
+
+                <button onclick="toggleTheme()">
+                    Toggle Theme
+                </button>
+
+            </div>
+
+            <div class="portal-setting-card">
+
+                <div>
+                    <h3>Reset Dashboard Data</h3>
+                    <p>Clear tasks, notes, habits, and Pomodoro sessions.</p>
+                </div>
+
+                <button class="portal-reset-btn" onclick="resetDashboardData()">
+                    Reset
+                </button>
+
+            </div>
+
+            <div class="portal-setting-card">
+
+                <div>
+                    <h3>Logout</h3>
+                    <p>Safely logout from your ChronoAI portal.</p>
+                </div>
+
+                <button class="portal-logout-btn" onclick="logoutUser()">
+                    Logout
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ==========================
+     RESET CONFIRMATION MODAL
+========================== -->
+
+<div class="reset-confirm-modal" id="resetConfirmModal">
+
+    <div class="reset-confirm-box">
+
+        <div class="reset-icon">
+            ⚠️
+        </div>
+
+        <h2>Reset Dashboard Data?</h2>
+
+        <p>
+            This will permanently clear your tasks, notes, habits, and Pomodoro sessions.
+            This action cannot be undone.
+        </p>
+
+        <div class="reset-confirm-actions">
+
+            <button class="reset-cancel-btn" onclick="closeResetConfirm()">
+                Cancel
+            </button>
+
+            <button class="reset-delete-btn" onclick="confirmResetDashboardData()">
+                Yes, Reset
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ==========================
+     UPGRADE PLAN MODAL
+========================== -->
+
+<div class="upgrade-modal" id="upgradeModal">
+
+    <div class="upgrade-box">
+
+        <button class="upgrade-close" onclick="closeUpgradePlan()">
+            ×
+        </button>
+
+        <h2>✨ Upgrade Your Plan</h2>
+
+        <p class="upgrade-subtitle">
+            Choose a plan that matches your productivity goals.
+        </p>
+
+        <div class="upgrade-grid">
+
+            <div class="upgrade-card">
+
+                <h3>🆓 Free</h3>
+
+                <h1>₹0</h1>
+
+                <ul>
+                    <li>✔ Pomodoro Timer</li>
+                    <li>✔ Stopwatch</li>
+                    <li>✔ Notes</li>
+                    <li>✔ Basic Dashboard</li>
+                </ul>
+
+                <button onclick="selectUpgradePlan('Free')">
+                    Current Plan
+                </button>
+
+            </div>
+
+            <div class="upgrade-card popular">
+
+                <span class="popular-badge">Most Popular</span>
+
+                <h3>⭐ Pro</h3>
+
+                <h1>₹199<span>/month</span></h1>
+
+                <ul>
+                    <li>✔ AI Planner</li>
+                    <li>✔ Calendar</li>
+                    <li>✔ Habit Tracker</li>
+                    <li>✔ Analytics</li>
+                    <li>✔ Smart Suggestions</li>
+                </ul>
+
+                <button onclick="selectUpgradePlan('Pro')">
+                    Upgrade
+                </button>
+
+            </div>
+
+            <div class="upgrade-card">
+
+                <h3>👑 Premium</h3>
+
+                <h1>₹399<span>/month</span></h1>
+
+                <ul>
+                    <li>✔ Everything in Pro</li>
+                    <li>✔ AI Assistant</li>
+                    <li>✔ Unlimited Tasks</li>
+                    <li>✔ Cloud Sync</li>
+                    <li>✔ Priority Support</li>
+                </ul>
+
+                <button onclick="selectUpgradePlan('Premium')">
+                    Go Premium
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script src="js/dashboard.js?v=22"></script>
+
+</body>
+</html>

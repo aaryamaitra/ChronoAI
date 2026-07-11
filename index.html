@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ChronoAI</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+<style>
+html {
+    scroll-behavior: smooth;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="background">
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+</div>
+
+<!-- Navbar -->
+<nav>
+
+    <div class="logo">
+        ⏱ ChronoAI
+    </div>
+
+    <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="login.html">Login</a></li>
+    </ul>
+
+    <button class="btn" id="getStartedBtn">
+        Get Started
+    </button>
+
+</nav>
+
+<!-- HERO SECTION -->
+<section class="hero" id="home">
+
+    <div class="hero-left">
+
+        <h1>
+            Master<br>
+            Your<br>
+            Time.
+        </h1>
+
+        <h2>
+            The next-generation AI platform
+            for focus, productivity and success.
+        </h2>
+
+        <p>
+            Stay focused. Build better habits.
+            Plan smarter with AI.
+            Track your productivity beautifully.
+        </p>
+
+        <div class="hero-buttons">
+
+            <button class="btn" id="startFreeBtn">
+                Start Free
+            </button>
+
+            <button class="btn2" id="learnMoreBtn">
+                Learn More
+            </button>
+
+        </div>
+
+        <div class="stats">
+
+            <div>
+                <h3>25K+</h3>
+                <span>Users</span>
+            </div>
+
+            <div>
+                <h3>4.9 ★</h3>
+                <span>Rating</span>
+            </div>
+
+            <div>
+                <h3>99%</h3>
+                <span>Focus</span>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="hero-right">
+
+        <div class="small-card card1">
+            🤖 AI Planner
+        </div>
+
+        <div class="glass-card">
+
+            <div class="status">
+                <span class="dot"></span>
+                AI Active
+            </div>
+
+            <h3>Today's Focus</h3>
+
+            <h1 id="live-time">00:00:00</h1>
+
+            <p>Deep Work Session</p>
+
+            <div class="progress">
+                <div class="progress-bar">
+                    <span>72%</span>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="card-info">
+
+                <div>
+                    <h4>Goal</h4>
+                    <span>Research Paper</span>
+                </div>
+
+                <div>
+                    <h4>Productivity</h4>
+                    <span>94%</span>
+                </div>
+
+                <div>
+                    <h4>Tasks</h4>
+                    <span>12 Completed</span>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="small-card card2">
+            ✅ 12 Tasks Today
+        </div>
+
+    </div>
+
+</section>
+
+<!-- FEATURES SECTION (EMPTY PLACEHOLDER FIX) -->
+<section id="features" class="features-section">
+
+    <h2 class="section-title">
+        Powerful Features
+    </h2>
+
+    <p class="section-subtitle">
+        Everything you need to stay productive, focused and organized with AI.
+    </p>
+
+    <div class="features-grid">
+
+        <div class="feature-card">
+            <div class="feature-icon">🤖</div>
+            <h3>AI Study Planner</h3>
+            <p>Create intelligent study schedules based on your goals and available time.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">🍅</div>
+            <h3>Pomodoro Timer</h3>
+            <p>Stay focused using customizable Pomodoro sessions and smart break reminders.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <h3>Analytics</h3>
+            <p>Visualize productivity trends with interactive charts and progress reports.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">📝</div>
+            <h3>Task Manager</h3>
+            <p>Create, organize and prioritize your daily tasks with ease.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">🌱</div>
+            <h3>Habit Tracker</h3>
+            <p>Build positive habits and monitor your consistency every day.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">📅</div>
+            <h3>Smart Calendar</h3>
+            <p>Manage deadlines, events and study plans from one intelligent calendar.</p>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ABOUT SECTION (EMPTY PLACEHOLDER FIX) -->
+<section id="about" class="about-section">
+
+    <div class="about-left">
+
+        <span class="about-tag">
+            ABOUT CHRONOAI
+        </span>
+
+        <h2>
+            Smarter Productivity.<br>
+            Powered by AI.
+        </h2>
+
+        <p>
+            ChronoAI is an intelligent productivity platform designed for
+            students and professionals. It combines AI-powered planning,
+            task management, Pomodoro sessions, habit tracking,
+            productivity analytics, and smart scheduling into one beautiful dashboard.
+        </p>
+
+        <div class="about-points">
+
+            <div class="point">
+                ✔ AI-Powered Study Planning
+            </div>
+
+            <div class="point">
+                ✔ Smart Time Management
+            </div>
+
+            <div class="point">
+                ✔ Real-Time Productivity Analytics
+            </div>
+
+            <div class="point">
+                ✔ Modern Glass UI Experience
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="about-right">
+
+        <div class="about-card">
+
+            <h1>25K+</h1>
+
+            <p>Happy Users</p>
+
+        </div>
+
+        <div class="about-card">
+
+            <h1>4.9★</h1>
+
+            <p>Average Rating</p>
+
+        </div>
+
+        <div class="about-card">
+
+            <h1>99%</h1>
+
+            <p>Focus Improvement</p>
+
+        </div>
+
+        <div class="about-card">
+
+            <h1>24/7</h1>
+
+            <p>AI Assistance</p>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ==========================
+     TESTIMONIALS
+========================== -->
+
+<section class="testimonials">
+
+    <h2 class="section-title">
+        Loved by Students & Professionals
+    </h2>
+
+    <p class="section-subtitle">
+        Thousands of users trust ChronoAI every day to stay productive.
+    </p>
+
+    <div class="testimonial-grid">
+
+        <div class="testimonial-card">
+
+            <div class="stars">
+                ⭐⭐⭐⭐⭐
+            </div>
+
+            <p>
+                "ChronoAI completely changed the way I study.
+                My productivity increased dramatically during exams."
+            </p>
+
+            <div class="user">
+
+                <div class="avatar">👩</div>
+
+                <div>
+
+                    <h4>Priya Sharma</h4>
+
+                    <span>B.Tech Student</span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="testimonial-card">
+
+            <div class="stars">
+                ⭐⭐⭐⭐⭐
+            </div>
+
+            <p>
+                "The AI Planner saves me hours every week.
+                Beautiful UI and very easy to use."
+            </p>
+
+            <div class="user">
+
+                <div class="avatar">👨</div>
+
+                <div>
+
+                    <h4>Rahul Verma</h4>
+
+                    <span>Software Engineer</span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="testimonial-card">
+
+            <div class="stars">
+                ⭐⭐⭐⭐⭐
+            </div>
+
+            <p>
+                "The Habit Tracker and Pomodoro timer keep me focused every day.
+                Highly recommended."
+            </p>
+
+            <div class="user">
+
+                <div class="avatar">👩‍🎓</div>
+
+                <div>
+
+                    <h4>Ananya Patel</h4>
+
+                    <span>University Student</span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ==========================
+        TRUSTED BY
+========================== -->
+
+<section class="trusted">
+
+    <h2>Trusted by 25,000+ Students & Professionals</h2>
+
+    <div class="trusted-grid">
+
+        <div class="trusted-card">
+            🎓
+            <h3>Universities</h3>
+            <p>Helping students manage study schedules efficiently.</p>
+        </div>
+
+        <div class="trusted-card">
+            💼
+            <h3>Companies</h3>
+            <p>Professionals use ChronoAI to organize daily work.</p>
+        </div>
+
+        <div class="trusted-card">
+            🌍
+            <h3>Worldwide</h3>
+            <p>Growing productivity community across multiple countries.</p>
+        </div>
+
+        <div class="trusted-card">
+            🤖
+            <h3>AI Powered</h3>
+            <p>Smart planning and recommendations powered by AI.</p>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ==========================
+      PROFESSIONAL PLAN MODAL
+========================== -->
+
+<div class="chrono-modal" id="planModal">
+
+    <div class="chrono-pricing-box">
+
+        <button class="chrono-close-btn" onclick="closePlan()">
+            ×
+        </button>
+
+        <div class="chrono-pricing-header">
+
+            <h1>✨ Choose Your Plan</h1>
+
+            <p>
+                Unlock more AI productivity features.
+            </p>
+
+        </div>
+
+        <div class="chrono-pricing-grid">
+
+            <!-- Free Plan -->
+            <div class="chrono-plan-card">
+
+                <div class="chrono-plan-top">
+
+                    <h2>🆓 Free</h2>
+
+                    <h3>
+                        ₹0
+                    </h3>
+
+                </div>
+
+                <ul class="chrono-features">
+                    <li>✔ Pomodoro Timer</li>
+                    <li>✔ Stopwatch</li>
+                    <li>✔ Notes</li>
+                    <li>✔ Basic Dashboard</li>
+                </ul>
+
+                <button class="chrono-plan-btn" onclick="selectPlan('Free')">
+                    Current Plan
+                </button>
+
+            </div>
+
+            <!-- Pro Plan -->
+            <div class="chrono-plan-card active-plan">
+
+                <div class="chrono-plan-top">
+
+                    <h2>⭐ Pro</h2>
+
+                    <h3>
+                        ₹199<span>/month</span>
+                    </h3>
+
+                </div>
+
+                <ul class="chrono-features">
+                    <li>✔ AI Planner</li>
+                    <li>✔ Calendar</li>
+                    <li>✔ Habit Tracker</li>
+                    <li>✔ Analytics</li>
+                    <li>✔ Smart Suggestions</li>
+                </ul>
+
+                <button class="chrono-plan-btn" onclick="selectPlan('Pro')">
+                    Upgrade
+                </button>
+
+            </div>
+
+            <!-- Premium Plan -->
+            <div class="chrono-plan-card">
+
+                <div class="chrono-plan-top">
+
+                    <h2>👑 Premium</h2>
+
+                    <h3>
+                        ₹399<span>/month</span>
+                    </h3>
+
+                </div>
+
+                <ul class="chrono-features">
+                    <li>✔ Everything in Pro</li>
+                    <li>✔ AI Assistant</li>
+                    <li>✔ Unlimited Tasks</li>
+                    <li>✔ Cloud Sync</li>
+                    <li>✔ Priority Support</li>
+                </ul>
+
+                <button class="chrono-plan-btn" onclick="selectPlan('Premium')">
+                    Go Premium
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<!-- ==========================
+        FOOTER
+========================== -->
+
+<footer class="footer">
+
+    <div class="footer-container">
+
+        <div class="footer-col">
+
+            <h2>⏱ ChronoAI</h2>
+
+            <p>
+                AI-powered productivity platform helping students
+                and professionals achieve more in less time.
+            </p>
+
+        </div>
+
+        <div class="footer-col">
+
+            <h3>Quick Links</h3>
+
+            <a href="#home">Home</a>
+            <a href="#features">Features</a>
+            <a href="#about">About</a>
+            <a href="login.html">Login</a>
+
+        </div>
+
+        <div class="footer-col">
+
+            <h3>Features</h3>
+
+            <a href="#">AI Planner</a>
+            <a href="#">Pomodoro</a>
+            <a href="#">Habit Tracker</a>
+            <a href="#">Analytics</a>
+
+        </div>
+
+        <div class="footer-col">
+
+            <h3>Contact</h3>
+
+            <p>📧 chronoaisupport@gmail.com</p>
+            <p>📍 Nagpur, India</p>
+            <p>📞 +91 9699584181</p>
+
+        </div>
+
+    </div>
+
+    <hr>
+
+    <div class="footer-bottom">
+
+        <p>
+            © 2026 ChronoAI. All Rights Reserved.
+        </p>
+
+        <p>
+            Made with ❤️ by Aarya
+        </p>
+
+    </div>
+
+</footer>
+
+<!-- ==========================
+     PLAN NOTICE MODAL
+========================== -->
+
+<div class="plan-notice-modal" id="planNoticeModal">
+
+    <div class="plan-notice-box">
+
+        <div class="plan-notice-icon">
+            ✨
+        </div>
+
+        <h2 id="planNoticeTitle">
+            Plan Selected
+        </h2>
+
+        <p id="planNoticeMessage">
+            Your plan has been selected successfully.
+        </p>
+
+        <button onclick="closePlanNotice()">
+            Continue
+        </button>
+
+    </div>
+
+</div>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="js/main.js" defer></script>
+
+</body>
+</html>

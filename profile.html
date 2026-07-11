@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChronoAI Profile</title>
+<link rel="stylesheet" href="css/profile.css?v=2">
+</head>
+
+<body>
+
+<div class="profile-page">
+
+    <div class="profile-container">
+
+        <div class="profile-header">
+
+            <a href="dashboard.html" class="back-btn">
+                ← Back to Dashboard
+            </a>
+
+            <h1>👤 My Profile</h1>
+
+            <p>
+                Manage your ChronoAI account, study goals, daily target,
+                and subscription details.
+            </p>
+
+        </div>
+
+        <div class="profile-main-card">
+
+            <div class="profile-top">
+
+                <div class="profile-avatar" id="profileAvatar">
+                    U
+                </div>
+
+                <div>
+                    <h2 id="profileDisplayName">User</h2>
+                    <p id="profileDisplayEmail">user@example.com</p>
+                    <span id="profilePlanBadge">Free Plan</span>
+                </div>
+
+            </div>
+
+            <div class="profile-stats">
+
+                <div>
+                    <span>Current Plan</span>
+                    <strong id="profilePlan">Free Plan</strong>
+                </div>
+
+                <div>
+                    <span>Daily Target</span>
+                    <strong id="profileTarget">2 Hours</strong>
+                </div>
+
+                <div>
+                    <span>Study Goal</span>
+                    <strong id="profileGoalShort">Productivity</strong>
+                </div>
+
+            </div>
+
+            <div class="profile-form">
+
+                <div class="form-group">
+                    <label>Your Name</label>
+                    <input type="text" id="profileNameInput" placeholder="Enter your name">
+                </div>
+
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="profileEmailInput" placeholder="Enter your email">
+                </div>
+
+                <div class="form-group full">
+                    <label>Study Goal</label>
+                    <input type="text" id="profileGoalInput" placeholder="Example: Learn Python and AI">
+                </div>
+
+                <div class="form-group">
+                    <label>Daily Target Hours</label>
+                    <input type="number" id="profileTargetHoursInput" min="1" max="12" placeholder="2">
+                </div>
+
+                <div class="form-group">
+                    <label>Account Type</label>
+                    <input type="text" value="ChronoAI User" readonly>
+                </div>
+
+                <button onclick="saveProfilePage()">
+                    Save Profile
+                </button>
+
+            </div>
+
+            <div class="goal-box" id="profileGoalText">
+                Goal: Build better productivity habits with ChronoAI.
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="js/profile.js?v=2"></script>
+
+</body>
+</html>
