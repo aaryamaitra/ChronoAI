@@ -1512,25 +1512,71 @@ function deleteReminder(id){
     showDashboardToast("Reminder deleted.");
 }
 
-function playAlarmSound(){
+function playAlarmSound(priority){
     try{
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+        const duration = 5;
+        const startTime = audioContext.currentTime;
+
         const oscillator = audioContext.createOscillator();
         const gainNode = audioContext.createGain();
 
         oscillator.connect(gainNode);
         gainNode.connect(audioContext.destination);
 
-        oscillator.frequency.value = 880;
         oscillator.type = "sine";
 
-        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+        // Different ringtone by priority
+        if(priority === "High"){
+            // Urgent fast ringtone
+            oscillator.frequency.setValueAtTime(1200, startTime);
+            oscillator.frequency.setValueAtTime(700, startTime + 0.25);
+            oscillator.frequency.setValueAtTime(1200, startTime + 0.5);
+            oscillator.frequency.setValueAtTime(700, startTime + 0.75);
+            oscillator.frequency.setValueAtTime(1200, startTime + 1);
+            oscillator.frequency.setValueAtTime(700, startTime + 1.25);
+            oscillator.frequency.setValueAtTime(1200, startTime + 1.5);
+            oscillator.frequency.setValueAtTime(700, startTime + 1.75);
+            oscillator.frequency.setValueAtTime(1200, startTime + 2);
+            oscillator.frequency.setValueAtTime(700, startTime + 2.25);
+            oscillator.frequency.setValueAtTime(1200, startTime + 2.5);
+            oscillator.frequency.setValueAtTime(700, startTime + 2.75);
+            oscillator.frequency.setValueAtTime(1200, startTime + 3);
+            oscillator.frequency.setValueAtTime(700, startTime + 3.25);
+            oscillator.frequency.setValueAtTime(1200, startTime + 3.5);
+            oscillator.frequency.setValueAtTime(700, startTime + 3.75);
+            oscillator.frequency.setValueAtTime(1200, startTime + 4);
+            oscillator.frequency.setValueAtTime(700, startTime + 4.25);
+            oscillator.frequency.setValueAtTime(1200, startTime + 4.5);
+        }
+        else if(priority === "Medium"){
+            // Normal ringtone
+            oscillator.frequency.setValueAtTime(880, startTime);
+            oscillator.frequency.setValueAtTime(1040, startTime + 0.5);
+            oscillator.frequency.setValueAtTime(880, startTime + 1);
+            oscillator.frequency.setValueAtTime(1040, startTime + 1.5);
+            oscillator.frequency.setValueAtTime(880, startTime + 2);
+            oscillator.frequency.setValueAtTime(1040, startTime + 2.5);
+            oscillator.frequency.setValueAtTime(880, startTime + 3);
+            oscillator.frequency.setValueAtTime(1040, startTime + 3.5);
+            oscillator.frequency.setValueAtTime(880, startTime + 4);
+            oscillator.frequency.setValueAtTime(1040, startTime + 4.5);
+        }
+        else{
+            // Low priority soft ringtone
+            oscillator.frequency.setValueAtTime(520, startTime);
+            oscillator.frequency.setValueAtTime(620, startTime + 1);
+            oscillator.frequency.setValueAtTime(520, startTime + 2);
+            oscillator.frequency.setValueAtTime(620, startTime + 3);
+            oscillator.frequency.setValueAtTime(520, startTime + 4);
+        }
 
-        oscillator.start();
+        gainNode.gain.setValueAtTime(0.28, startTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, startTime + duration);
 
-        setTimeout(function(){
-            oscillator.stop();
-        }, 700);
+        oscillator.start(startTime);
+        oscillator.stop(startTime + duration);
     }
     catch(error){
         console.log("Audio not supported.");
@@ -1538,29 +1584,70 @@ function playAlarmSound(){
 }
 
 function showReminderNotification(reminder){
-    playAlarmSound();
+    playAlarmSound(reminder.priority);
 
-    showDashboardToast("Reminder: " + reminder.title);
+    showDashboardToast(reminder.priority + " Reminder: " + reminder.title);
 
-    if("Notification" in window){
-
-        if(Notification.permission === "granted"){
-            new Notification("ChronoAI Reminder", {
-                body: reminder.title + " at " + reminder.time
-            });
-        }
-        else if(Notification.permission !== "denied"){
-            Notification.requestPermission().then(function(permission){
-                if(permission === "granted"){
-                    new Notification("ChronoAI Reminder", {
-                        body: reminder.title + " at " + reminder.time
-                    });
-                }
-            });
-        }
-
+    if("Notification" in window && Notification.permission === "granted"){
+        new Notification("ChronoAI " + reminder.priority + " Reminder", {
+            body: reminder.title + " at " + reminder.time
+        });
     }
 }
+
+function requestChronoNotifications(){
+
+    if(!("Notification" in window)){
+        showDashboardToast("Browser notifications are not supported.");
+        return;
+    }
+
+    Notification.requestPermission().then(function(permission){
+
+        updateNotificationButton();
+
+        if(permission === "granted"){
+            showDashboardToast("Notifications enabled successfully.");
+        }
+        else if(permission === "denied"){
+            showDashboardToast("Notifications blocked. Alarm sound and toast will still work.");
+        }
+        else{
+            showDashboardToast("Notifications not enabled yet.");
+        }
+
+    });
+}
+
+function updateNotificationButton(){
+    const button = getEl("notificationPermissionBtn");
+
+    if(!button) return;
+
+    if(!("Notification" in window)){
+        button.textContent = "Notifications Not Supported";
+        button.disabled = true;
+        return;
+    }
+
+    button.classList.remove("enabled", "blocked");
+
+    if(Notification.permission === "granted"){
+        button.textContent = "Notifications Enabled";
+        button.classList.add("enabled");
+        button.disabled = true;
+    }
+    else if(Notification.permission === "denied"){
+        button.textContent = "Notifications Blocked";
+        button.classList.add("blocked");
+    }
+    else{
+        button.textContent = "Enable Notifications";
+        button.disabled = false;
+    }
+}
+
+updateNotificationButton();
 
 function checkReminders(){
     const now = new Date();
@@ -1579,12 +1666,11 @@ function checkReminders(){
             reminder.notified === false
         ){
             showReminderNotification(reminder);
-            reminder.notified = true;
-            changed = true;
-        }
 
-        if(reminder.time !== currentTime && reminder.notified === true){
-            reminder.notified = false;
+            // Automatically cut/complete reminder after ringing
+            reminder.completed = true;
+            reminder.notified = true;
+
             changed = true;
         }
 

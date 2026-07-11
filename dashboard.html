@@ -402,10 +402,18 @@
 
 <!-- Alarm & Reminder -->
 <div class="card alarm-card" id="alarm-section">
-    <div class="card-header">
+   <div class="alarm-head-row">
+
+    <div>
         <h3>⏰ Alarm & Reminder</h3>
         <p>Create reminders and get notified on time.</p>
     </div>
+
+    <button class="notification-permission-btn" id="notificationPermissionBtn" onclick="requestChronoNotifications()">
+        Enable Notifications
+    </button>
+
+</div>
 
     <div class="alarm-form">
 
@@ -713,7 +721,7 @@
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
-<script src="js/dashboard.js?v=22"></script>
+<script src="js/dashboard.js?v=25"></script>
 
 </body>
 </html>
