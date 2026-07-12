@@ -2,6 +2,7 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const protect = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
@@ -131,6 +132,21 @@ router.post("/login", async function(req, res){
             message: "Server error during login."
         });
     }
+});
+
+// GET LOGGED-IN USER
+router.get("/me", protect, async function(req, res){
+    res.json({
+        success: true,
+        user: {
+            id: req.user._id,
+            name: req.user.name,
+            email: req.user.email,
+            plan: req.user.plan,
+            paymentStatus: req.user.paymentStatus,
+            createdAt: req.user.createdAt
+        }
+    });
 });
 
 module.exports = router;
