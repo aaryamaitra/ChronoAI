@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChronoAI Time Tools</title>
+<link rel="stylesheet" href="css/time-tools.css">
+</head>
+
+<body>
+
+<button class="mobile-menu-btn" onclick="toggleMobileSidebar()">☰</button>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeMobileSidebar()"></div>
+
+<div class="sidebar">
+
+    <h2>⏱ ChronoAI</h2>
+
+    <ul>
+        <li><a href="dashboard.html">🏠 Dashboard</a></li>
+        <li><a href="profile.html">👤 Profile</a></li>
+        <li><a href="dashboard.html#tasks">📝 Tasks</a></li>
+        <li><a href="dashboard.html#notes">🗒 Notes</a></li>
+        <li><a href="dashboard.html#planner">🤖 AI Planner</a></li>
+        <li><a href="time-tools.html" class="active-menu">⏱ Time Tools</a></li>
+        <li><a href="dashboard.html#calendar-section">📅 Calendar</a></li>
+        <li><a href="dashboard.html#habits">🌱 Habit Tracker</a></li>
+        <li><a href="dashboard.html#analytics">📊 Analytics</a></li>
+    </ul>
+
+</div>
+
+<main class="main">
+
+    <section class="time-hero">
+
+        <div>
+            <span class="page-badge">ChronoAI Tools</span>
+            <h1>Time Management Center</h1>
+            <p>
+                Manage focused study sessions, track time, and set smart reminders
+                from one clean productivity workspace.
+            </p>
+        </div>
+
+        <div class="hero-clock">
+            <span>Live Time</span>
+            <strong id="liveClock">00:00:00</strong>
+        </div>
+
+    </section>
+
+    <section class="tool-grid">
+
+        <!-- Pomodoro -->
+        <div class="tool-card pomodoro-card">
+
+            <div class="tool-header">
+                <div>
+                    <h2>🍅 Pomodoro Timer</h2>
+                    <p>Stay focused with deep work sessions.</p>
+                </div>
+
+                <span class="tool-tag">Focus</span>
+            </div>
+
+            <div class="timer-display" id="timer">25:00</div>
+
+            <div class="tool-actions">
+                <button onclick="startTimer()">Start</button>
+                <button onclick="pauseTimer()">Pause</button>
+                <button onclick="resetTimer()">Reset</button>
+            </div>
+
+        </div>
+
+        <!-- Stopwatch -->
+        <div class="tool-card stopwatch-card">
+
+            <div class="tool-header">
+                <div>
+                    <h2>⏱ Stopwatch</h2>
+                    <p>Track study time, work sessions, and practice time.</p>
+                </div>
+
+                <span class="tool-tag">Track</span>
+            </div>
+
+            <div class="timer-display" id="stopwatch">00:00:00</div>
+
+            <div class="tool-actions">
+                <button onclick="startStopwatch()">Start</button>
+                <button onclick="stopStopwatch()">Stop</button>
+                <button onclick="resetStopwatch()">Reset</button>
+            </div>
+
+        </div>
+
+        <!-- Alarm -->
+        <div class="tool-card alarm-card">
+
+            <div class="tool-header alarm-header">
+
+                <div>
+                    <h2>⏰ Alarm & Reminder</h2>
+                    <p>Create reminders and get notified at the right time.</p>
+                </div>
+
+                <div class="permission-actions">
+
+                    <button id="notificationPermissionBtn" onclick="requestChronoNotifications()">
+                        Enable Notifications
+                    </button>
+
+                    <button id="soundPermissionBtn" onclick="unlockChronoSound()">
+                        Enable Sound
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="alarm-form">
+
+                <input type="text" id="reminderTitle" placeholder="Reminder title">
+
+                <input type="time" id="reminderTime">
+
+                <select id="reminderPriority">
+                    <option value="Low">Low Priority</option>
+                    <option value="Medium" selected>Medium Priority</option>
+                    <option value="High">High Priority</option>
+                </select>
+
+                <button onclick="addReminder()">Add Reminder</button>
+
+            </div>
+
+            <div class="reminder-list" id="reminderList">
+                <!-- reminders appear here -->
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+<script src="js/time-tools.js"></script>
+
+</body>
+</html>

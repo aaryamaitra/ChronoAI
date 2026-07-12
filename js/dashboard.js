@@ -613,8 +613,44 @@ function formatAIReply(reply){
 }
 
 function handleLocalAICommands(message){
-    const text = message.toLowerCase();
 
+    const text = message.toLowerCase();
+    const replyParts = [];
+
+    const isComplaint =
+        text.includes("did not") ||
+        text.includes("didn't") ||
+        text.includes("not doing") ||
+        text.includes("not working");
+
+    // GREETING
+    if(
+        text === "hi" ||
+        text === "hello" ||
+        text === "hey" ||
+        text.includes("hello buddy") ||
+        text.includes("hi buddy") ||
+        text.includes("hii")
+    ){
+        return `
+Hello 👋
+
+I am your **ChronoAI Assistant**.
+
+I can help you with:
+• Study planning
+• Productivity
+• Time management
+• Daily schedules
+
+You can also give me commands like:
+• **Add task complete DBMS assignment**
+• **Create 7 tasks for Python study**
+• **Start timer**
+        `;
+    }
+
+    // ADD SINGLE TASK
     if(text.startsWith("add task")){
         const taskText = message.replace(/add task/gi, "").trim();
 
@@ -634,9 +670,109 @@ function handleLocalAICommands(message){
         saveTasks(tasks);
         loadTasks();
 
+        if(typeof updateDashboardStats === "function"){
+            updateDashboardStats();
+        }
+
         return `Task added successfully: **${taskText}**`;
     }
 
+    // CREATE 7 STUDY TASKS
+    if(
+        !isComplaint &&
+        (text.includes("create") || text.includes("make") || text.includes("set up") || text.includes("generate")) &&
+        (text.includes("7") || text.includes("seven")) &&
+        (text.includes("task") || text.includes("study plan") || text.includes("plan"))
+    ){
+        let topic = message
+            .replace(/create|make|set up|setup|generate|add|seven|7|tasks|task|study|plan|for|me|my/gi, "")
+            .replace(/\s+/g, " ")
+            .trim();
+
+        if(topic === ""){
+            topic = "Study";
+        }
+
+        const studyTasks = [
+            `Day 1: Learn basics of ${topic}`,
+            `Day 2: Practice important concepts of ${topic}`,
+            `Day 3: Solve beginner-level questions of ${topic}`,
+            `Day 4: Revise weak topics in ${topic}`,
+            `Day 5: Build short notes for ${topic}`,
+            `Day 6: Practice mixed questions of ${topic}`,
+            `Day 7: Final revision and mini test for ${topic}`
+        ];
+
+        const tasks = getTasks();
+
+        studyTasks.forEach(function(taskText){
+            tasks.push({
+                task: taskText,
+                priority: "High",
+                date: "",
+                completed: false
+            });
+        });
+
+        saveTasks(tasks);
+        loadTasks();
+
+        if(typeof updateDashboardStats === "function"){
+            updateDashboardStats();
+        }
+
+        replyParts.push(`I added **7 study tasks** for **${topic}** to your dashboard.`);
+    }
+
+    // START POMODORO TIMER
+    if(
+        !isComplaint &&
+        (
+            text.includes("start timer") ||
+            text.includes("start pomodoro") ||
+            text.includes("begin timer") ||
+            text.includes("start my timer")
+        )
+    ){
+        if(typeof startTimer === "function"){
+            startTimer();
+            replyParts.push("I started your **Pomodoro timer**.");
+        }
+        else{
+            replyParts.push("Timer function is not available on this page. Please open Time Tools page.");
+        }
+    }
+
+    // PAUSE TIMER
+    if(!isComplaint && (text.includes("pause timer") || text.includes("pause pomodoro"))){
+        if(typeof pauseTimer === "function"){
+            pauseTimer();
+            replyParts.push("I paused your **Pomodoro timer**.");
+        }
+    }
+
+    // RESET TIMER
+    if(!isComplaint && (text.includes("reset timer") || text.includes("reset pomodoro"))){
+        if(typeof resetTimer === "function"){
+            resetTimer();
+            replyParts.push("I reset your **Pomodoro timer**.");
+        }
+    }
+
+    // CURRENT PLAN
+    if(text.includes("my plan") || text.includes("current plan") || text.includes("subscription")){
+        const currentPlan = localStorage.getItem("chronoSelectedPlan") || "Free";
+        const paymentStatus = localStorage.getItem("chronoPaymentStatus") || "Not Paid";
+
+        return `
+Your Current Plan:
+
+Plan: **${currentPlan}**
+Payment Status: **${paymentStatus}**
+        `;
+    }
+
+    // CLEAR CHAT
     if(text.includes("clear chat")){
         localStorage.removeItem("chronoAIChatHistory");
 
@@ -647,6 +783,10 @@ function handleLocalAICommands(message){
         }
 
         return "Chat history cleared successfully.";
+    }
+
+    if(replyParts.length > 0){
+        return replyParts.join("\n\n");
     }
 
     return null;
@@ -687,9 +827,21 @@ async function sendMessage(){
 
     const message = input.value.trim();
 
-    if(message === "") return;
+if(message === "") return;
 
-    aiIsSending = true;
+if(!hasPlanAccess("Premium")){
+    addChatMessage("user", escapeHTML(message));
+
+    addChatMessage(
+        "bot",
+        "🔒 Full AI Assistant is available only in the <b>Premium Plan</b>. Please upgrade to use AI planning, task creation, smart schedules, and productivity control."
+    );
+
+    input.value = "";
+    return;
+}
+
+aiIsSending = true;
 
     addChatMessage("user", escapeHTML(message));
     addToAIHistory("user", message);
@@ -765,6 +917,8 @@ async function sendMessage(){
         aiIsSending = false;
     }
 }
+
+
 
 const userMessageInput = getEl("userMessage");
 
@@ -981,6 +1135,7 @@ async function selectUpgradePlan(planName){
     if(planName === "Free"){
 
         localStorage.setItem("chronoSelectedPlan", "Free");
+        location.reload();
 
         const settingsPlan = getEl("settingsPlan");
 
@@ -1332,7 +1487,7 @@ function applyPlanAccessControl(){
         {
             heading: "AI Assistant",
             name: "AI Assistant",
-            requiredPlan: "Pro"
+            requiredPlan: "Premium"
         }
     ];
 
@@ -1512,12 +1667,127 @@ function deleteReminder(id){
     showDashboardToast("Reminder deleted.");
 }
 
-function playAlarmSound(priority){
+async function playAlarmSound(priority){
     try{
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const audioContext = getChronoAudioContext();
 
-        const duration = 5;
+        if(audioContext.state === "suspended"){
+            await audioContext.resume();
+        }
+
         const startTime = audioContext.currentTime;
+        const totalDuration = 5;
+
+        const masterGain = audioContext.createGain();
+        const compressor = audioContext.createDynamicsCompressor();
+
+        compressor.threshold.setValueAtTime(-18, startTime);
+        compressor.knee.setValueAtTime(25, startTime);
+        compressor.ratio.setValueAtTime(8, startTime);
+        compressor.attack.setValueAtTime(0.003, startTime);
+        compressor.release.setValueAtTime(0.25, startTime);
+
+        masterGain.connect(compressor);
+        compressor.connect(audioContext.destination);
+
+        // LOUDER VOLUME
+        masterGain.gain.setValueAtTime(0.95, startTime);
+        masterGain.gain.exponentialRampToValueAtTime(0.001, startTime + totalDuration);
+
+        function playNote(freq, time, length, volume, type){
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+
+            oscillator.type = type || "sine";
+            oscillator.frequency.setValueAtTime(freq, time);
+
+            gainNode.gain.setValueAtTime(0.001, time);
+            gainNode.gain.exponentialRampToValueAtTime(volume, time + 0.03);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, time + length);
+
+            oscillator.connect(gainNode);
+            gainNode.connect(masterGain);
+
+            oscillator.start(time);
+            oscillator.stop(time + length + 0.05);
+        }
+
+        function playChord(notes, time, length, volume){
+            notes.forEach(function(note){
+                playNote(note, time, length, volume, "triangle");
+            });
+        }
+
+        if(priority === "High"){
+
+            // High: loud premium alert
+            const melody = [659.25, 783.99, 987.77, 1046.50];
+
+            for(let round = 0; round < 4; round++){
+                const base = startTime + round * 1.15;
+
+                melody.forEach(function(note, index){
+                    playNote(note, base + index * 0.22, 0.34, 0.48, "sine");
+                });
+
+                playChord([329.63, 493.88, 659.25], base + 0.95, 0.42, 0.18);
+            }
+        }
+        else if(priority === "Medium"){
+
+            // Medium: louder digital bell
+            const melody = [523.25, 659.25, 783.99, 659.25];
+
+            for(let round = 0; round < 3; round++){
+                const base = startTime + round * 1.45;
+
+                melody.forEach(function(note, index){
+                    playNote(note, base + index * 0.28, 0.42, 0.44, "triangle");
+                });
+
+                playChord([523.25, 659.25, 783.99], base + 1.05, 0.50, 0.16);
+            }
+        }
+        else{
+
+            // Low: louder calm chime
+            const melody = [392.00, 493.88, 587.33, 783.99];
+
+            for(let round = 0; round < 3; round++){
+                const base = startTime + round * 1.6;
+
+                melody.forEach(function(note, index){
+                    playNote(note, base + index * 0.34, 0.58, 0.36, "triangle");
+                });
+
+                playChord([392.00, 587.33], base + 1.25, 0.68, 0.14);
+            }
+        }
+    }
+    catch(error){
+        console.log("Audio not supported.", error);
+        showDashboardToast("Audio blocked. Click Enable Sound first.");
+    }
+}
+let chronoAudioContext = null;
+let chronoSoundEnabled = false;
+
+function getChronoAudioContext(){
+    if(!chronoAudioContext){
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        chronoAudioContext = new AudioContextClass();
+    }
+
+    return chronoAudioContext;
+}
+
+async function unlockChronoSound(){
+    try{
+        const audioContext = getChronoAudioContext();
+
+        if(audioContext.state === "suspended"){
+            await audioContext.resume();
+        }
 
         const oscillator = audioContext.createOscillator();
         const gainNode = audioContext.createGain();
@@ -1525,74 +1795,136 @@ function playAlarmSound(priority){
         oscillator.connect(gainNode);
         gainNode.connect(audioContext.destination);
 
-        oscillator.type = "sine";
+        gainNode.gain.setValueAtTime(0.001, audioContext.currentTime);
 
-        // Different ringtone by priority
-        if(priority === "High"){
-            // Urgent fast ringtone
-            oscillator.frequency.setValueAtTime(1200, startTime);
-            oscillator.frequency.setValueAtTime(700, startTime + 0.25);
-            oscillator.frequency.setValueAtTime(1200, startTime + 0.5);
-            oscillator.frequency.setValueAtTime(700, startTime + 0.75);
-            oscillator.frequency.setValueAtTime(1200, startTime + 1);
-            oscillator.frequency.setValueAtTime(700, startTime + 1.25);
-            oscillator.frequency.setValueAtTime(1200, startTime + 1.5);
-            oscillator.frequency.setValueAtTime(700, startTime + 1.75);
-            oscillator.frequency.setValueAtTime(1200, startTime + 2);
-            oscillator.frequency.setValueAtTime(700, startTime + 2.25);
-            oscillator.frequency.setValueAtTime(1200, startTime + 2.5);
-            oscillator.frequency.setValueAtTime(700, startTime + 2.75);
-            oscillator.frequency.setValueAtTime(1200, startTime + 3);
-            oscillator.frequency.setValueAtTime(700, startTime + 3.25);
-            oscillator.frequency.setValueAtTime(1200, startTime + 3.5);
-            oscillator.frequency.setValueAtTime(700, startTime + 3.75);
-            oscillator.frequency.setValueAtTime(1200, startTime + 4);
-            oscillator.frequency.setValueAtTime(700, startTime + 4.25);
-            oscillator.frequency.setValueAtTime(1200, startTime + 4.5);
-        }
-        else if(priority === "Medium"){
-            // Normal ringtone
-            oscillator.frequency.setValueAtTime(880, startTime);
-            oscillator.frequency.setValueAtTime(1040, startTime + 0.5);
-            oscillator.frequency.setValueAtTime(880, startTime + 1);
-            oscillator.frequency.setValueAtTime(1040, startTime + 1.5);
-            oscillator.frequency.setValueAtTime(880, startTime + 2);
-            oscillator.frequency.setValueAtTime(1040, startTime + 2.5);
-            oscillator.frequency.setValueAtTime(880, startTime + 3);
-            oscillator.frequency.setValueAtTime(1040, startTime + 3.5);
-            oscillator.frequency.setValueAtTime(880, startTime + 4);
-            oscillator.frequency.setValueAtTime(1040, startTime + 4.5);
-        }
-        else{
-            // Low priority soft ringtone
-            oscillator.frequency.setValueAtTime(520, startTime);
-            oscillator.frequency.setValueAtTime(620, startTime + 1);
-            oscillator.frequency.setValueAtTime(520, startTime + 2);
-            oscillator.frequency.setValueAtTime(620, startTime + 3);
-            oscillator.frequency.setValueAtTime(520, startTime + 4);
-        }
+        oscillator.start();
+        oscillator.stop(audioContext.currentTime + 0.05);
 
-        gainNode.gain.setValueAtTime(0.28, startTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, startTime + duration);
+        chronoSoundEnabled = true;
+        localStorage.setItem("chronoSoundEnabled", "true");
 
-        oscillator.start(startTime);
-        oscillator.stop(startTime + duration);
+        updateSoundButton();
+
+        showDashboardToast("Alarm sound enabled successfully.");
     }
     catch(error){
-        console.log("Audio not supported.");
+        console.log("Sound unlock failed", error);
+        showDashboardToast("Please click Enable Sound again.");
     }
 }
+
+function updateSoundButton(){
+    const button = getEl("soundPermissionBtn");
+
+    if(!button) return;
+
+    if(localStorage.getItem("chronoSoundEnabled") === "true"){
+        button.textContent = "Sound Enabled";
+        button.classList.add("enabled");
+    }
+    else{
+        button.textContent = "Enable Sound";
+        button.classList.remove("enabled");
+    }
+}
+
+updateSoundButton();
+
+
 
 function showReminderNotification(reminder){
     playAlarmSound(reminder.priority);
 
+    showChronoReminderPopup(reminder);
+
     showDashboardToast(reminder.priority + " Reminder: " + reminder.title);
 
     if("Notification" in window && Notification.permission === "granted"){
-        new Notification("ChronoAI " + reminder.priority + " Reminder", {
-            body: reminder.title + " at " + reminder.time
+
+        const iconSvg = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128">
+                <defs>
+                    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0%" stop-color="#6C63FF"/>
+                        <stop offset="100%" stop-color="#46C6FF"/>
+                    </linearGradient>
+                </defs>
+                <rect width="128" height="128" rx="32" fill="url(#g)"/>
+                <text x="64" y="78" text-anchor="middle" font-size="58" font-family="Arial" fill="white">⏰</text>
+            </svg>
+        `;
+
+        const iconUrl = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(iconSvg);
+
+        new Notification("⏰ ChronoAI Reminder", {
+            body: reminder.priority + " Priority • " + reminder.title + " • " + reminder.time,
+            icon: iconUrl,
+            badge: iconUrl,
+            silent: true
         });
     }
+}
+
+function showChronoReminderPopup(reminder){
+
+    const oldPopup = document.querySelector(".chrono-reminder-popup");
+
+    if(oldPopup){
+        oldPopup.remove();
+    }
+
+    const popup = document.createElement("div");
+    popup.className = "chrono-reminder-popup";
+
+    const priorityClass = reminder.priority.toLowerCase();
+
+    popup.innerHTML = `
+        <div class="chrono-reminder-top">
+            <div class="chrono-reminder-icon">⏰</div>
+            <div>
+                <h3>ChronoAI Reminder</h3>
+                <p>Your scheduled reminder is ready.</p>
+            </div>
+        </div>
+
+        <p><b>${escapeHTML(reminder.title)}</b></p>
+
+        <div class="chrono-reminder-meta">
+            <span class="chrono-reminder-pill ${priorityClass}">
+                ${escapeHTML(reminder.priority)} Priority
+            </span>
+            <span class="chrono-reminder-pill">
+                ${escapeHTML(reminder.time)}
+            </span>
+        </div>
+
+        <div class="chrono-reminder-actions">
+            <button onclick="closeChronoReminderPopup()">Okay, Done</button>
+            <button onclick="closeChronoReminderPopup()">Dismiss</button>
+        </div>
+    `;
+
+    document.body.appendChild(popup);
+
+    setTimeout(function(){
+        popup.classList.add("show");
+    }, 50);
+
+    setTimeout(function(){
+        closeChronoReminderPopup();
+    }, 9000);
+}
+
+function closeChronoReminderPopup(){
+    const popup = document.querySelector(".chrono-reminder-popup");
+
+    if(!popup) return;
+
+    popup.classList.remove("show");
+
+    setTimeout(function(){
+        popup.remove();
+    }, 350);
 }
 
 function requestChronoNotifications(){
@@ -1905,3 +2237,164 @@ function updateActiveSidebarOnScroll(){
 
 window.addEventListener("scroll", updateActiveSidebarOnScroll);
 updateActiveSidebarOnScroll();
+
+// =============================
+// FINAL PLAN UX + SETTINGS FIX
+// =============================
+
+function getRequiredPlanForSidebarLink(link){
+    const text = link.textContent.toLowerCase();
+    const href = link.getAttribute("href") || "";
+
+    if(
+        text.includes("settings") ||
+        text.includes("profile") ||
+        text.includes("dashboard") ||
+        text.includes("notes") ||
+        text.includes("time tools")
+    ){
+        return "Free";
+    }
+
+    if(text.includes("ai planner") || href.includes("planner")){
+        return "Premium";
+    }
+
+    if(
+        text.includes("tasks") ||
+        text.includes("analytics") ||
+        text.includes("habit") ||
+        text.includes("calendar")
+    ){
+        return "Pro";
+    }
+
+    return "Free";
+}
+
+function addSidebarPlanBadges(){
+    const links = document.querySelectorAll(".sidebar a");
+
+    links.forEach(function(link){
+        const requiredPlan = getRequiredPlanForSidebarLink(link);
+
+        const oldBadge = link.querySelector(".sidebar-plan-badge");
+
+        if(oldBadge){
+            oldBadge.remove();
+        }
+
+        link.classList.remove("locked-sidebar-link");
+
+        if(requiredPlan === "Free"){
+            return;
+        }
+
+        const badge = document.createElement("span");
+        badge.className = "sidebar-plan-badge";
+        badge.textContent = requiredPlan;
+
+        link.appendChild(badge);
+
+        if(!hasPlanAccess(requiredPlan)){
+            link.classList.add("locked-sidebar-link");
+        }
+    });
+}
+
+function protectLockedSidebarLinks(){
+    const links = document.querySelectorAll(".sidebar a");
+
+    links.forEach(function(link){
+        link.addEventListener("click", function(event){
+            const requiredPlan = getRequiredPlanForSidebarLink(link);
+
+            if(requiredPlan === "Free"){
+                return;
+            }
+
+            if(!hasPlanAccess(requiredPlan)){
+                event.preventDefault();
+                event.stopPropagation();
+
+                showDashboardToast(requiredPlan + " plan required to unlock this feature.");
+                openUpgradePlan();
+            }
+        });
+    });
+}
+
+function forceSettingsAlwaysAvailable(){
+    const settingsModal = getEl("settingsModal");
+    const upgradeModal = getEl("upgradeModal");
+
+    const settingsLinks = Array.from(document.querySelectorAll(".sidebar a")).filter(function(link){
+        return link.textContent.toLowerCase().includes("settings");
+    });
+
+    settingsLinks.forEach(function(link){
+        link.classList.remove("locked-sidebar-link");
+
+        const badge = link.querySelector(".sidebar-plan-badge");
+
+        if(badge){
+            badge.remove();
+        }
+
+        link.onclick = function(event){
+            event.preventDefault();
+            event.stopPropagation();
+            openSettings(event);
+        };
+    });
+
+    [settingsModal, upgradeModal].forEach(function(modal){
+        if(!modal) return;
+
+        modal.classList.remove("locked-feature-card");
+
+        const overlay = modal.querySelector(".plan-lock-overlay");
+
+        if(overlay){
+            overlay.remove();
+        }
+
+        const controls = modal.querySelectorAll("button, input, textarea, select");
+
+        controls.forEach(function(control){
+            control.disabled = false;
+        });
+    });
+}
+
+function keepUpgradeButtonsWorking(){
+    const unlockButtons = document.querySelectorAll(".unlock-btn, .lock-content button");
+
+    unlockButtons.forEach(function(button){
+        button.disabled = false;
+
+        button.onclick = function(event){
+            event.preventDefault();
+            event.stopPropagation();
+            openUpgradePlan();
+        };
+    });
+}
+
+const originalApplyPlanAccessControl = applyPlanAccessControl;
+
+applyPlanAccessControl = function(){
+    originalApplyPlanAccessControl();
+
+    addSidebarPlanBadges();
+    forceSettingsAlwaysAvailable();
+    keepUpgradeButtonsWorking();
+};
+
+addSidebarPlanBadges();
+protectLockedSidebarLinks();
+forceSettingsAlwaysAvailable();
+keepUpgradeButtonsWorking();
+applyPlanAccessControl();
+
+   

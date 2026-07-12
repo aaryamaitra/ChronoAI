@@ -5,7 +5,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ChronoAI Dashboard</title>
-<link rel="stylesheet" href="css/dashboard.css">
+<link rel="stylesheet" href="css/dashboard.css?v=36">
+
 </head>
 
 <body>
@@ -25,7 +26,10 @@
 
     <li><a href="#dashboard">🏠 Dashboard</a></li>
 
+    <li><a href="time-tools.html">⏱ Time Tools</a></li>
+
     <li><a href="profile.html">👤 Profile</a></li>
+
     <li><a href="#analytics">📊 Analytics</a></li>
 
     <li><a href="#tasks">📝 Tasks</a></li>
@@ -38,14 +42,10 @@
 
     <li><a href="#calendar-section">📅 Calendar</a></li>
 
-    <li><a href="#pomodoro">🍅 Pomodoro</a></li>
 
-    <li><a href="#stopwatch-section">⏱ Stopwatch</a></li>
-
-<li><a href="#alarm-section">⏰ Alarm</a></li>
-
-<li><a href="#" onclick="openSettings(event)">⚙️ Settings</a></li></ul>
-
+<li>
+    <a href="javascript:void(0)" id="settingsSidebarLink">⚙️ Settings</a>
+</li>
 </div>
 
 <div class="main">
@@ -152,14 +152,19 @@
 
         <!-- Productivity -->
 
-        <div class="card" id="dashboard">
+        <div class="card time-tools-portal-card">
 
-            <h2>Productivity</h2>
+    <h2>⏱ Time Tools</h2>
 
-            <h1>94%</h1>
+    <p>
+        Access Pomodoro Timer, Stopwatch, Alarm and Smart Reminders from one professional time management center.
+    </p>
 
-        </div>
+    <a href="time-tools.html" class="open-tools-btn">
+        Open Time Tools
+    </a>
 
+</div>
         
         <!-- Task Manager -->
 
@@ -265,6 +270,41 @@
 
         </div>
 
+
+        <!-- ✅ FIXED CALENDAR -->
+
+        <div class="card" id="calendar-section">
+
+            <h2>📅 Calendar</h2>
+
+            <div class="calendar-header">
+
+                <button onclick="previousMonth()">◀</button>
+
+                <h3 id="monthYear"></h3>
+
+                <button onclick="nextMonth()">▶</button>
+
+            </div>
+
+            <div class="calendar-weekdays">
+
+                <div>Sun</div>
+                <div>Mon</div>
+                <div>Tue</div>
+                <div>Wed</div>
+                <div>Thu</div>
+                <div>Fri</div>
+                <div>Sat</div>
+
+            </div>
+
+            <div id="calendarDays" class="calendar-grid"></div>
+
+        </div>
+
+
+
        <!-- AI Assistant -->
 
 <div class="card ai-card" id="planner">
@@ -328,118 +368,8 @@
 
     
 
-        <!-- ✅ FIXED CALENDAR -->
-
-        <div class="card" id="calendar-section">
-
-            <h2>📅 Calendar</h2>
-
-            <div class="calendar-header">
-
-                <button onclick="previousMonth()">◀</button>
-
-                <h3 id="monthYear"></h3>
-
-                <button onclick="nextMonth()">▶</button>
-
-            </div>
-
-            <div class="calendar-weekdays">
-
-                <div>Sun</div>
-                <div>Mon</div>
-                <div>Tue</div>
-                <div>Wed</div>
-                <div>Thu</div>
-                <div>Fri</div>
-                <div>Sat</div>
-
-            </div>
-
-            <div id="calendarDays" class="calendar-grid"></div>
-
-        </div>
-
-        <!-- Pomodoro -->
-
-        <div class="card" id="pomodoro">
-
-            <h2>🍅 Pomodoro Timer</h2>
-
-            <h1 id="timer">25:00</h1>
-
-            <div class="timer-buttons">
-
-                <button onclick="startTimer()">Start</button>
-
-                <button onclick="pauseTimer()">Pause</button>
-
-                <button onclick="resetTimer()">Reset</button>
-
-            </div>
-
-        </div>
-
-                <!-- Stopwatch -->
-
-        <div class="card" id="stopwatch-section">
-
-            <h2>⏱ Stopwatch</h2>
-
-            <h1 id="stopwatch">00:00:00</h1>
-
-            <div class="timer-buttons">
-
-                <button onclick="startStopwatch()">Start</button>
-
-                <button onclick="stopStopwatch()">Stop</button>
-
-                <button onclick="resetStopwatch()">Reset</button>
-
-            </div>
-
-        </div>
-
-<!-- Alarm & Reminder -->
-<div class="card alarm-card" id="alarm-section">
-   <div class="alarm-head-row">
-
-    <div>
-        <h3>⏰ Alarm & Reminder</h3>
-        <p>Create reminders and get notified on time.</p>
-    </div>
-
-    <button class="notification-permission-btn" id="notificationPermissionBtn" onclick="requestChronoNotifications()">
-        Enable Notifications
-    </button>
-
-</div>
-
-    <div class="alarm-form">
-
-        <input type="text" id="reminderTitle" placeholder="Reminder title">
-
-        <input type="time" id="reminderTime">
-
-        <select id="reminderPriority">
-            <option value="Low">Low Priority</option>
-            <option value="Medium" selected>Medium Priority</option>
-            <option value="High">High Priority</option>
-        </select>
-
-        <button onclick="addReminder()">Add Reminder</button>
-
-    </div>
-
-    <div class="reminder-list" id="reminderList">
-        <!-- Reminders will appear here -->
-    </div>
-
-</div>
-
-    </div>
-
-</div>
+        
+        
 
 <!-- ==========================
      PROFESSIONAL SETTINGS MODAL
@@ -717,11 +647,194 @@
 </div>
 
 
+<style>
+/* ==============================
+   FINAL CLEAN TIME TOOLS LAYOUT
+============================== */
 
+@media(min-width:1001px){
+
+    .cards{
+        display:grid !important;
+        grid-template-columns:repeat(2, minmax(0, 1fr)) !important;
+        gap:28px !important;
+        align-items:start !important;
+    }
+
+    #pomodoro,
+    #stopwatch-section,
+    #alarm-section{
+        height:auto !important;
+        min-height:0 !important;
+        max-height:none !important;
+        align-self:start !important;
+        padding:32px !important;
+        border-radius:24px !important;
+    }
+
+    /* Pomodoro + Stopwatch clean compact cards */
+    #pomodoro,
+    #stopwatch-section{
+        min-height:280px !important;
+    }
+
+    #pomodoro h2,
+    #stopwatch-section h2{
+        font-size:28px !important;
+        margin-bottom:22px !important;
+    }
+
+    #pomodoro h1,
+    #stopwatch-section h1{
+        font-size:56px !important;
+        margin:6px 0 32px !important;
+        line-height:1 !important;
+    }
+
+    #pomodoro .timer-buttons,
+    #stopwatch-section .timer-buttons{
+        display:grid !important;
+        grid-template-columns:repeat(3, 1fr) !important;
+        gap:14px !important;
+        margin-top:0 !important;
+    }
+
+    #pomodoro .timer-buttons button,
+    #stopwatch-section .timer-buttons button{
+        height:52px !important;
+        border-radius:16px !important;
+        font-size:16px !important;
+        font-weight:900 !important;
+    }
+
+    /* Alarm card professional layout */
+    #alarm-section .alarm-head-row{
+        display:block !important;
+        margin-bottom:22px !important;
+    }
+
+    #alarm-section .alarm-head-row h3{
+        font-size:30px !important;
+        line-height:1.2 !important;
+        margin-bottom:8px !important;
+        white-space:nowrap !important;
+    }
+
+    #alarm-section .alarm-head-row p{
+        font-size:15px !important;
+        color:#AAB6C5 !important;
+        margin-bottom:18px !important;
+    }
+
+    #alarm-section .alarm-permission-actions{
+        display:grid !important;
+        grid-template-columns:1fr 1fr !important;
+        gap:14px !important;
+        width:100% !important;
+    }
+
+    #alarm-section .notification-permission-btn{
+        width:100% !important;
+        height:52px !important;
+        margin:0 !important;
+        padding:0 14px !important;
+        border-radius:16px !important;
+        font-size:15px !important;
+        font-weight:900 !important;
+    }
+
+    #alarm-section .alarm-form{
+        display:grid !important;
+        grid-template-columns:1fr 1fr !important;
+        gap:14px !important;
+        margin-top:0 !important;
+    }
+
+    #alarm-section .alarm-form input,
+    #alarm-section .alarm-form select{
+        width:100% !important;
+        height:58px !important;
+        border-radius:18px !important;
+        font-size:15px !important;
+    }
+
+    #alarm-section .alarm-form select{
+        grid-column:1 / -1 !important;
+    }
+
+    #alarm-section .alarm-form button{
+        grid-column:1 / -1 !important;
+        height:58px !important;
+        border-radius:18px !important;
+        font-size:17px !important;
+        font-weight:900 !important;
+        margin-top:4px !important;
+    }
+
+    #alarm-section .reminder-list{
+        margin-top:22px !important;
+    }
+
+    #alarm-section .reminder-item{
+        padding:18px 20px !important;
+        border-radius:20px !important;
+    }
+
+    #alarm-section .ringtone-preview-box{
+        margin-top:22px !important;
+        padding:18px !important;
+        border-radius:20px !important;
+    }
+
+    #alarm-section .ringtone-preview-box h4{
+        font-size:18px !important;
+        margin-bottom:14px !important;
+    }
+
+    #alarm-section .ringtone-preview-buttons{
+        display:grid !important;
+        grid-template-columns:repeat(3, 1fr) !important;
+        gap:12px !important;
+    }
+
+    #alarm-section .ringtone-preview-buttons button{
+        height:50px !important;
+        border-radius:16px !important;
+        font-size:16px !important;
+        font-weight:900 !important;
+    }
+}
+
+@media(max-width:1000px){
+
+    .cards{
+        grid-template-columns:1fr !important;
+    }
+
+    #pomodoro,
+    #stopwatch-section,
+    #alarm-section{
+        height:auto !important;
+        min-height:auto !important;
+    }
+
+    #alarm-section .alarm-permission-actions,
+    #alarm-section .alarm-form,
+    #alarm-section .ringtone-preview-buttons,
+    #pomodoro .timer-buttons,
+    #stopwatch-section .timer-buttons{
+        grid-template-columns:1fr !important;
+    }
+
+    #alarm-section .alarm-head-row h3{
+        white-space:normal !important;
+    }
+}
+</style>
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
-<script src="js/dashboard.js?v=25"></script>
+<script src="js/dashboard.js?v=100"></script>
 
 </body>
 </html>

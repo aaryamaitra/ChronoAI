@@ -2937,3 +2937,993 @@ body.light-mode .profile-summary-box strong{
         width:100% !important;
     }
 }
+
+/* ==============================
+   PROFESSIONAL REMINDER POPUP
+============================== */
+
+.chrono-reminder-popup{
+    position:fixed;
+    right:28px;
+    bottom:95px;
+    z-index:120000;
+    width:360px;
+    max-width:calc(100% - 32px);
+    padding:20px;
+    border-radius:24px;
+    background:rgba(15,23,42,.96);
+    border:1px solid rgba(70,198,255,.28);
+    box-shadow:0 25px 70px rgba(0,0,0,.45),
+               0 0 35px rgba(70,198,255,.18);
+    backdrop-filter:blur(20px);
+    transform:translateY(30px) scale(.96);
+    opacity:0;
+    pointer-events:none;
+    transition:.35s ease;
+}
+
+.chrono-reminder-popup.show{
+    transform:translateY(0) scale(1);
+    opacity:1;
+    pointer-events:auto;
+}
+
+.chrono-reminder-top{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:14px;
+}
+
+.chrono-reminder-icon{
+    width:52px;
+    height:52px;
+    border-radius:18px;
+    background:linear-gradient(135deg,#6C63FF,#46C6FF);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:24px;
+    box-shadow:0 0 24px rgba(70,198,255,.35);
+}
+
+.chrono-reminder-popup h3{
+    font-size:20px;
+    margin-bottom:4px;
+    color:#F8FAFC;
+}
+
+.chrono-reminder-popup p{
+    color:#AAB6C5;
+    line-height:1.6;
+    font-size:14px;
+}
+
+.chrono-reminder-meta{
+    display:flex;
+    gap:10px;
+    margin:16px 0;
+    flex-wrap:wrap;
+}
+
+.chrono-reminder-pill{
+    padding:7px 12px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:900;
+    background:rgba(70,198,255,.14);
+    color:#46C6FF;
+}
+
+.chrono-reminder-pill.high{
+    background:rgba(255,77,77,.16);
+    color:#ff6b6b;
+}
+
+.chrono-reminder-pill.medium{
+    background:rgba(70,198,255,.16);
+    color:#46C6FF;
+}
+
+.chrono-reminder-pill.low{
+    background:rgba(49,208,170,.16);
+    color:#31D0AA;
+}
+
+.chrono-reminder-actions{
+    display:flex;
+    gap:12px;
+}
+
+.chrono-reminder-actions button{
+    flex:1;
+    border:none;
+    border-radius:14px;
+    padding:12px;
+    cursor:pointer;
+    font-weight:900;
+    color:white;
+    background:linear-gradient(90deg,#6C63FF,#46C6FF);
+}
+
+.chrono-reminder-actions button:last-child{
+    background:rgba(255,255,255,.1);
+    color:#AAB6C5;
+}
+
+@media(max-width:600px){
+    .chrono-reminder-popup{
+        right:16px;
+        bottom:80px;
+        width:calc(100% - 32px);
+    }
+}
+
+
+
+.ringtone-preview-buttons button{
+    border:none;
+    border-radius:14px;
+    padding:12px;
+    color:white;
+    font-weight:800;
+    cursor:pointer;
+    background:linear-gradient(90deg,#6C63FF,#46C6FF);
+}
+
+.ringtone-preview-buttons button:hover{
+    transform:translateY(-2px);
+    box-shadow:0 12px 25px rgba(70,198,255,.25);
+}
+
+@media(max-width:600px){
+    .ringtone-preview-buttons{
+        grid-template-columns:1fr;
+    }
+}
+
+.sound-permission-btn{
+    background:rgba(49,208,170,.15) !important;
+    color:#31D0AA !important;
+    border-color:rgba(49,208,170,.35) !important;
+}
+
+.sound-permission-btn.enabled{
+    background:linear-gradient(90deg,#31D0AA,#46C6FF) !important;
+    color:white !important;
+}
+
+.alarm-permission-actions{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    min-width:220px;
+}
+
+@media(max-width:700px){
+    .alarm-permission-actions{
+        width:100%;
+    }
+}
+
+/* Better alarm layout inside grid */
+.alarm-card{
+    min-height:420px;
+}
+
+.alarm-head-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:20px;
+}
+
+.alarm-permission-actions{
+    min-width:230px;
+}
+
+.alarm-form{
+    grid-template-columns:1fr 1fr;
+}
+
+.alarm-form button{
+    grid-column:1 / -1;
+}
+/* ==============================
+   PROFESSIONAL TIME TOOLS LAYOUT FIX
+============================== */
+
+/* Stop cards from stretching badly */
+.cards{
+    align-items:start;
+}
+
+/* Stopwatch compact professional card */
+#stopwatch-section{
+    min-height:330px;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+}
+
+#stopwatch-section h1{
+    margin-top:18px;
+    margin-bottom:28px;
+}
+
+/* Alarm card clean layout */
+.alarm-card{
+    min-height:auto;
+    padding:28px;
+}
+
+/* Alarm header */
+.alarm-head-row{
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+    margin-bottom:22px;
+}
+
+.alarm-head-row h3{
+    font-size:28px;
+    margin-bottom:8px;
+}
+
+.alarm-head-row p{
+    font-size:15px;
+    color:#AAB6C5;
+}
+
+/* Notification + sound buttons side by side */
+.alarm-permission-actions{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    width:100%;
+    min-width:0;
+}
+
+.notification-permission-btn{
+    width:100% !important;
+    height:50px;
+    margin:0 !important;
+    border-radius:16px !important;
+    font-size:14px !important;
+}
+
+/* Alarm form clean grid */
+.alarm-form{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+    margin-top:10px;
+}
+
+.alarm-form input,
+.alarm-form select{
+    height:58px;
+    border-radius:18px;
+}
+
+.alarm-form select{
+    grid-column:1 / -1;
+}
+
+.alarm-form button{
+    grid-column:1 / -1;
+    height:58px;
+    border-radius:18px;
+    margin-top:4px;
+}
+
+/* Reminder list */
+.reminder-list{
+    margin-top:22px;
+}
+
+.reminder-item{
+    padding:18px 20px;
+    border-radius:20px;
+}
+
+/* Preview ringtone compact */
+.ringtone-preview-box{
+    margin-top:22px;
+    padding:18px;
+    border-radius:20px;
+}
+
+.ringtone-preview-box h4{
+    font-size:18px;
+    margin-bottom:14px;
+}
+
+.ringtone-preview-buttons{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+}
+
+.ringtone-preview-buttons button{
+    height:50px;
+    border-radius:16px;
+}
+
+/* Mobile fix */
+@media(max-width:900px){
+    .alarm-permission-actions,
+    .alarm-form,
+    .ringtone-preview-buttons{
+        grid-template-columns:1fr;
+    }
+
+    #stopwatch-section{
+        min-height:auto;
+    }
+}
+
+/* ==============================
+   FINAL PROFESSIONAL TIME TOOLS FIX
+   Calendar + Pomodoro + Stopwatch + Alarm
+============================== */
+
+/* Better grid spacing */
+.cards{
+    align-items:start;
+}
+
+/* Make time tool cards clean and balanced */
+#calendar-section,
+#pomodoro,
+#stopwatch-section,
+#alarm-section{
+    border-radius:24px;
+    padding:34px;
+}
+
+/* Pomodoro and Stopwatch compact but professional */
+#pomodoro,
+#stopwatch-section{
+    min-height:300px !important;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+}
+
+#pomodoro h2,
+#stopwatch-section h2{
+    font-size:28px;
+    margin-bottom:22px;
+}
+
+#pomodoro h1,
+#stopwatch-section h1{
+    font-size:54px;
+    margin:10px 0 34px;
+    line-height:1;
+}
+
+#pomodoro .timer-buttons,
+#stopwatch-section .timer-buttons{
+    margin-top:0;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:14px;
+}
+
+#pomodoro .timer-buttons button,
+#stopwatch-section .timer-buttons button{
+    height:52px;
+    border-radius:15px;
+    font-size:16px;
+    font-weight:800;
+}
+
+/* Alarm card premium layout */
+#alarm-section{
+    min-height:auto !important;
+}
+
+#alarm-section .alarm-head-row{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:18px;
+    margin-bottom:24px;
+}
+
+#alarm-section .alarm-head-row h3{
+    font-size:30px;
+    line-height:1.2;
+    margin-bottom:8px;
+}
+
+#alarm-section .alarm-head-row p{
+    font-size:16px;
+    color:#AAB6C5;
+}
+
+/* Permission buttons clean row */
+#alarm-section .alarm-permission-actions{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+    width:100%;
+    min-width:0;
+}
+
+#alarm-section .notification-permission-btn{
+    width:100% !important;
+    height:54px !important;
+    margin:0 !important;
+    padding:0 14px !important;
+    border-radius:17px !important;
+    font-size:15px !important;
+    font-weight:900 !important;
+}
+
+/* Alarm form clean */
+#alarm-section .alarm-form{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+    margin-top:0;
+}
+
+#alarm-section .alarm-form input,
+#alarm-section .alarm-form select{
+    height:58px;
+    border-radius:18px;
+    font-size:15px;
+}
+
+#alarm-section .alarm-form select{
+    grid-column:1 / -1;
+}
+
+#alarm-section .alarm-form button{
+    grid-column:1 / -1;
+    height:60px;
+    border-radius:18px;
+    margin-top:4px;
+    font-size:17px;
+    font-weight:900;
+}
+
+/* Reminder list compact */
+#alarm-section .reminder-list{
+    margin-top:22px;
+}
+
+#alarm-section .reminder-item{
+    min-height:auto;
+    padding:18px 20px;
+    border-radius:20px;
+}
+
+/* Ringtone preview compact and professional */
+#alarm-section .ringtone-preview-box{
+    margin-top:22px;
+    padding:20px;
+    border-radius:22px;
+}
+
+#alarm-section .ringtone-preview-box h4{
+    font-size:18px;
+    margin-bottom:14px;
+}
+
+#alarm-section .ringtone-preview-buttons{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:14px;
+}
+
+#alarm-section .ringtone-preview-buttons button{
+    height:52px;
+    border-radius:16px;
+    font-size:16px;
+    font-weight:900;
+}
+
+/* Calendar professional spacing */
+#calendar-section h2{
+    font-size:28px;
+    margin-bottom:24px;
+}
+
+#calendar-section .calendar-header{
+    margin-bottom:24px;
+}
+
+#calendar-section .calendar-header h3{
+    font-size:26px;
+}
+
+#calendar-section .calendar-grid .day{
+    width:48px;
+    height:48px;
+    border-radius:13px;
+}
+
+/* Mobile and tablet */
+@media(max-width:1000px){
+    #alarm-section .alarm-permission-actions,
+    #alarm-section .alarm-form,
+    #alarm-section .ringtone-preview-buttons,
+    #pomodoro .timer-buttons,
+    #stopwatch-section .timer-buttons{
+        grid-template-columns:1fr;
+    }
+
+    #pomodoro,
+    #stopwatch-section{
+        min-height:auto !important;
+    }
+}
+
+/* ==============================
+   FINAL FORCE FIX FOR TIME TOOLS
+============================== */
+
+.cards{
+    display:grid !important;
+    grid-template-columns:repeat(2, minmax(0, 1fr)) !important;
+    gap:28px !important;
+    align-items:start !important;
+}
+
+/* Stop grid from stretching stopwatch card */
+#stopwatch-section{
+    align-self:start !important;
+    height:340px !important;
+    min-height:340px !important;
+    max-height:340px !important;
+    padding:34px !important;
+    display:flex !important;
+    flex-direction:column !important;
+    justify-content:flex-start !important;
+}
+
+#stopwatch-section h2{
+    font-size:28px !important;
+    margin-bottom:22px !important;
+}
+
+#stopwatch-section h1{
+    font-size:54px !important;
+    margin:8px 0 34px !important;
+    line-height:1 !important;
+}
+
+#stopwatch-section .timer-buttons{
+    display:grid !important;
+    grid-template-columns:repeat(3, 1fr) !important;
+    gap:14px !important;
+    margin-top:0 !important;
+}
+
+#stopwatch-section .timer-buttons button{
+    height:52px !important;
+    border-radius:16px !important;
+    font-size:16px !important;
+    font-weight:800 !important;
+}
+
+/* Alarm card should stay natural height */
+#alarm-section{
+    align-self:start !important;
+    height:auto !important;
+    min-height:auto !important;
+    max-height:none !important;
+    padding:34px !important;
+}
+
+/* Alarm heading clean */
+#alarm-section .alarm-head-row{
+    display:block !important;
+    margin-bottom:24px !important;
+}
+
+#alarm-section .alarm-head-row h3{
+    font-size:30px !important;
+    line-height:1.2 !important;
+    margin-bottom:8px !important;
+}
+
+#alarm-section .alarm-head-row p{
+    font-size:15px !important;
+    color:#AAB6C5 !important;
+    margin-bottom:18px !important;
+}
+
+/* Notification buttons */
+#alarm-section .alarm-permission-actions{
+    display:grid !important;
+    grid-template-columns:1fr 1fr !important;
+    gap:14px !important;
+    width:100% !important;
+    min-width:0 !important;
+}
+
+#alarm-section .notification-permission-btn{
+    width:100% !important;
+    height:54px !important;
+    margin:0 !important;
+    padding:0 14px !important;
+    border-radius:18px !important;
+    font-size:15px !important;
+    font-weight:900 !important;
+}
+
+/* Alarm input layout */
+#alarm-section .alarm-form{
+    display:grid !important;
+    grid-template-columns:1fr 1fr !important;
+    gap:14px !important;
+    margin-top:20px !important;
+}
+
+#alarm-section .alarm-form input,
+#alarm-section .alarm-form select{
+    width:100% !important;
+    height:58px !important;
+    border-radius:18px !important;
+    font-size:15px !important;
+}
+
+#alarm-section .alarm-form select{
+    grid-column:1 / -1 !important;
+}
+
+#alarm-section .alarm-form button{
+    grid-column:1 / -1 !important;
+    height:60px !important;
+    border-radius:18px !important;
+    margin-top:4px !important;
+    font-size:17px !important;
+    font-weight:900 !important;
+}
+
+/* Reminder and preview clean */
+#alarm-section .reminder-list{
+    margin-top:22px !important;
+}
+
+#alarm-section .reminder-item{
+    padding:18px 20px !important;
+    border-radius:20px !important;
+}
+
+#alarm-section .ringtone-preview-box{
+    margin-top:22px !important;
+    padding:20px !important;
+    border-radius:22px !important;
+}
+
+#alarm-section .ringtone-preview-buttons{
+    display:grid !important;
+    grid-template-columns:repeat(3, 1fr) !important;
+    gap:14px !important;
+}
+
+#alarm-section .ringtone-preview-buttons button{
+    height:52px !important;
+    border-radius:16px !important;
+}
+
+/* Mobile */
+@media(max-width:1000px){
+    .cards{
+        grid-template-columns:1fr !important;
+    }
+
+    #stopwatch-section{
+        height:auto !important;
+        min-height:auto !important;
+        max-height:none !important;
+    }
+
+    #alarm-section .alarm-permission-actions,
+    #alarm-section .alarm-form,
+    #alarm-section .ringtone-preview-buttons,
+    #stopwatch-section .timer-buttons{
+        grid-template-columns:1fr !important;
+    }
+}
+
+body{
+    outline:10px solid red !important;
+}
+
+/* ==============================
+   TIME TOOLS PORTAL CARD
+============================== */
+
+.time-tools-portal-card{
+    min-height:260px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+}
+
+.time-tools-portal-card p{
+    color:#AAB6C5;
+    line-height:1.7;
+    font-size:16px;
+    margin-top:12px;
+}
+
+.open-tools-btn{
+    display:block;
+    text-align:center;
+    text-decoration:none;
+    margin-top:28px;
+    padding:16px;
+    border-radius:16px;
+    background:linear-gradient(90deg,#6C63FF,#46C6FF);
+    color:white;
+    font-weight:900;
+    transition:.3s;
+}
+
+.open-tools-btn:hover{
+    transform:translateY(-3px);
+    box-shadow:0 14px 30px rgba(70,198,255,.28);
+}
+
+/* ==============================
+   COMPACT CALENDAR BESIDE HABIT
+============================== */
+
+#habits,
+#calendar-section{
+    min-height:440px;
+    align-self:start;
+}
+
+#calendar-section{
+    padding:30px;
+}
+
+#calendar-section h2{
+    font-size:28px;
+    margin-bottom:22px;
+}
+
+#calendar-section .calendar-header{
+    margin-bottom:18px;
+}
+
+#calendar-section .calendar-header h3{
+    font-size:24px;
+}
+
+#calendar-section .calendar-header button{
+    width:46px;
+    height:46px;
+    font-size:18px;
+}
+
+#calendar-section .calendar-weekdays{
+    gap:8px;
+    margin-bottom:10px;
+}
+
+#calendar-section .calendar-weekdays div{
+    font-size:14px;
+}
+
+#calendar-section .calendar-grid{
+    gap:8px;
+}
+
+#calendar-section .calendar-grid .day{
+    width:40px;
+    height:40px;
+    border-radius:12px;
+    font-size:15px;
+}
+
+/* Keep calendar and habit balanced on desktop */
+@media(min-width:1001px){
+    #habits,
+    #calendar-section{
+        height:440px;
+        overflow:hidden;
+    }
+}
+
+/* Mobile fix */
+@media(max-width:1000px){
+    #habits,
+    #calendar-section{
+        height:auto;
+        min-height:auto;
+    }
+}
+
+/* ==============================
+   PLAN LOCK OVERLAY
+============================== */
+
+.locked-feature-card{
+    position:relative;
+    overflow:hidden;
+}
+
+.locked-feature-card > *:not(.plan-lock-overlay){
+    filter:blur(1.8px);
+    opacity:.35;
+    pointer-events:none;
+}
+
+.plan-lock-overlay{
+    position:absolute;
+    inset:0;
+    z-index:50;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    background:rgba(8,17,31,.76);
+    backdrop-filter:blur(8px);
+    border-radius:inherit;
+}
+
+.lock-content{
+    max-width:340px;
+    text-align:center;
+    padding:28px;
+    border-radius:24px;
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.16);
+    box-shadow:0 25px 70px rgba(0,0,0,.35);
+}
+
+.lock-icon{
+    width:62px;
+    height:62px;
+    margin:0 auto 16px;
+    border-radius:20px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:28px;
+    background:linear-gradient(135deg,#6C63FF,#46C6FF);
+    box-shadow:0 0 28px rgba(70,198,255,.35);
+}
+
+.lock-content h3{
+    font-size:24px;
+    margin-bottom:10px;
+    color:#F8FAFC;
+}
+
+.lock-content p{
+    color:#AAB6C5;
+    line-height:1.6;
+    margin-bottom:20px;
+}
+
+.lock-content button{
+    width:100%;
+    height:50px;
+    border:none;
+    border-radius:16px;
+    background:linear-gradient(90deg,#6C63FF,#46C6FF);
+    color:white;
+    font-weight:900;
+    cursor:pointer;
+}
+
+/* ==============================
+   PROFESSIONAL PLAN LOCK UX
+============================== */
+
+.sidebar li a{
+    position:relative;
+    justify-content:space-between;
+    gap:10px;
+}
+
+.sidebar-plan-badge{
+    margin-left:auto;
+    padding:4px 9px;
+    border-radius:999px;
+    font-size:11px;
+    font-weight:900;
+    background:rgba(70,198,255,.16);
+    color:#46C6FF;
+    border:1px solid rgba(70,198,255,.28);
+}
+
+.locked-sidebar-link{
+    opacity:.72;
+}
+
+.locked-sidebar-link::after{
+    content:"🔒";
+    font-size:13px;
+}
+
+/* Better locked feature card */
+.locked-feature-card{
+    position:relative;
+    overflow:hidden;
+}
+
+.locked-feature-card > *:not(.plan-lock-overlay){
+    filter:blur(1.2px);
+    opacity:.28;
+    pointer-events:none;
+}
+
+.plan-lock-overlay{
+    position:absolute;
+    inset:0;
+    z-index:80;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    background:rgba(8,17,31,.72);
+    backdrop-filter:blur(10px);
+    border-radius:inherit;
+}
+
+.lock-content{
+    width:100%;
+    max-width:360px;
+    text-align:center;
+    padding:30px;
+    border-radius:26px;
+    background:linear-gradient(135deg,rgba(108,99,255,.18),rgba(70,198,255,.12));
+    border:1px solid rgba(70,198,255,.28);
+    box-shadow:0 25px 70px rgba(0,0,0,.45),
+               0 0 35px rgba(70,198,255,.15);
+}
+
+.lock-icon{
+    width:66px;
+    height:66px;
+    margin:0 auto 18px;
+    border-radius:22px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:30px;
+    background:linear-gradient(135deg,#6C63FF,#46C6FF);
+    box-shadow:0 0 30px rgba(70,198,255,.35);
+}
+
+.lock-content h3{
+    font-size:25px;
+    margin-bottom:10px;
+    color:#F8FAFC;
+}
+
+.lock-content p{
+    color:#AAB6C5;
+    line-height:1.65;
+    margin-bottom:22px;
+}
+
+.lock-content button,
+.unlock-btn{
+    width:100%;
+    height:52px;
+    border:none;
+    border-radius:17px;
+    background:linear-gradient(90deg,#6C63FF,#46C6FF);
+    color:white;
+    font-weight:900;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.lock-content button:hover,
+.unlock-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 14px 30px rgba(70,198,255,.25);
+}

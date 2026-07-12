@@ -1,23 +1,54 @@
+// =============================
+// CHRONOAI BACKEND SERVER
+// Express + MongoDB + Razorpay + Gemini AI
+// =============================
+
+require("dotenv").config();
+
 const express = require("express");
 const cors = require("cors");
+const mongoose = require("mongoose");
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
 const { GoogleGenAI } = require("@google/genai");
-require("dotenv").config();
+
+const authRoutes = require("./routes/authRoutes");
 
 const app = express();
 
+// =============================
+// MIDDLEWARE
+// =============================
+
 app.use(cors());
 app.use(express.json());
+
+// =============================
+// ROUTES
+// =============================
+
+app.use("/api/auth", authRoutes);
+
+// =============================
+// RAZORPAY SETUP
+// =============================
 
 const razorpay = new Razorpay({
     key_id: process.env.RAZORPAY_KEY_ID,
     key_secret: process.env.RAZORPAY_KEY_SECRET
 });
 
+// =============================
+// GEMINI AI SETUP
+// =============================
+
 const ai = new GoogleGenAI({
     apiKey: process.env.GEMINI_API_KEY
 });
+
+// =============================
+// SUBSCRIPTION PLANS
+// =============================
 
 const plans = {
     Pro: {
@@ -30,9 +61,17 @@ const plans = {
     }
 };
 
+// =============================
+// BASIC HEALTH ROUTE
+// =============================
+
 app.get("/", function(req, res){
-    res.send("ChronoAI payment backend is running.");
+    res.send("ChronoAI backend is running successfully.");
 });
+
+// =============================
+// RAZORPAY CREATE ORDER
+// =============================
 
 app.post("/create-order", async function(req, res){
 
@@ -43,6 +82,13 @@ app.post("/create-order", async function(req, res){
             return res.status(400).json({
                 success: false,
                 message: "Invalid plan selected."
+            });
+        }
+
+        if(!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET){
+            return res.status(500).json({
+                success: false,
+                message: "Razorpay keys are missing in .env file."
             });
         }
 
@@ -78,6 +124,10 @@ app.post("/create-order", async function(req, res){
 
 });
 
+// =============================
+// RAZORPAY VERIFY PAYMENT
+// =============================
+
 app.post("/verify-payment", function(req, res){
 
     try{
@@ -87,6 +137,13 @@ app.post("/verify-payment", function(req, res){
             razorpay_signature,
             planName
         } = req.body;
+
+        if(!razorpay_order_id || !razorpay_payment_id || !razorpay_signature || !planName){
+            return res.status(400).json({
+                success: false,
+                message: "Payment details are missing."
+            });
+        }
 
         const body = razorpay_order_id + "|" + razorpay_payment_id;
 
@@ -131,10 +188,9 @@ app.get("/ai-health", function(req, res){
     res.json({
         success: true,
         geminiKeyLoaded: process.env.GEMINI_API_KEY ? "YES" : "NO",
-        geminiModel: process.env.GEMINI_MODEL || "gemini-3.5-flash"
+        geminiModel: process.env.GEMINI_MODEL || "gemini-flash-latest"
     });
 });
-
 
 // =============================
 // CHRONOAI ADVANCED AI ASSISTANT
@@ -191,7 +247,7 @@ User details:
 Recent conversation history:
 ${formattedHistory || "No previous conversation."}
 
-Rules:
+Important rules:
 1. Answer like a helpful professional AI assistant.
 2. Use simple student-friendly language.
 3. Give accurate and practical answers.
@@ -200,59 +256,62 @@ Rules:
 6. For productivity, use the user's task count.
 7. Do not invent fake personal details.
 8. Do not claim payment is active unless current plan is Pro or Premium.
+9. You cannot directly see the user's screen.
+10. You cannot actually add tasks, start timers, or change dashboard data unless the frontend already performs that action.
+11. Never say "I added it", "I started it", or "I changed it" unless the frontend sent confirmation.
 
 User message:
 ${message}
 `;
 
         const fallbackModels = [
-    process.env.GEMINI_MODEL || "gemini-flash-latest",
-    "gemini-flash-latest",
-    "gemini-3.5-flash",
-    "gemini-3.1-flash-lite"
-];
+            process.env.GEMINI_MODEL || "gemini-flash-latest",
+            "gemini-flash-latest",
+            "gemini-3.5-flash",
+            "gemini-3.1-flash-lite"
+        ];
 
-let aiReply = null;
-let lastError = null;
+        let aiReply = null;
+        let lastError = null;
 
-for(const modelName of fallbackModels){
+        for(const modelName of fallbackModels){
 
-    try{
+            try{
 
-        const response = await ai.models.generateContent({
-            model: modelName,
-            contents: prompt
-        });
+                const response = await ai.models.generateContent({
+                    model: modelName,
+                    contents: prompt
+                });
 
-        aiReply = response.text;
+                aiReply = response.text;
 
-        if(aiReply){
-            break;
+                if(aiReply){
+                    break;
+                }
+
+            }
+            catch(modelError){
+
+                lastError = modelError;
+
+                console.log("Model failed:", modelName);
+                console.log("Reason:", modelError.message);
+
+            }
+
         }
 
-    }
-    catch(modelError){
+        if(!aiReply){
+            return res.status(500).json({
+                success: false,
+                reply: "AI is busy right now. Please try again after a few seconds. Last error: " + (lastError ? lastError.message : "Unknown error")
+            });
+        }
 
-        lastError = modelError;
-
-        console.log("Model failed:", modelName);
-        console.log("Reason:", modelError.message);
-
-    }
-
-}
-
-if(!aiReply){
-    return res.status(500).json({
-        success: false,
-        reply: "AI is busy right now. Please try again after a few seconds. Last error: " + (lastError ? lastError.message : "Unknown error")
-    });
-}
-
-res.json({
-    success: true,
-    reply: aiReply
-});
+        res.json({
+            success: true,
+            reply: aiReply
+        });
 
     }
     catch(error){
@@ -269,7 +328,20 @@ res.json({
 
 });
 
-app.listen(process.env.PORT || 5000, function(){
-    console.log("ChronoAI backend running on port " + (process.env.PORT || 5000));
-});
+// =============================
+// MONGODB CONNECTION + SERVER START
+// =============================
 
+const PORT = process.env.PORT || 5000;
+
+mongoose.connect(process.env.MONGO_URI)
+    .then(function(){
+        console.log("MongoDB connected successfully.");
+
+        app.listen(PORT, function(){
+            console.log("ChronoAI backend running on port " + PORT);
+        });
+    })
+    .catch(function(error){
+        console.error("MongoDB connection error:", error);
+    });
