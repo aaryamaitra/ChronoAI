@@ -14,6 +14,9 @@ const { GoogleGenAI } = require("@google/genai");
 
 const authRoutes = require("./routes/authRoutes");
 
+const protect = require("./middleware/authMiddleware");
+const User = require("./models/User");
+
 const app = express();
 
 // =============================
@@ -73,7 +76,12 @@ app.get("/", function(req, res){
 // RAZORPAY CREATE ORDER
 // =============================
 
-app.post("/create-order", async function(req, res){
+// =============================
+// RAZORPAY CREATE ORDER
+// Protected: only logged-in users can create payment order
+// =============================
+
+app.post("/create-order", protect, async function(req, res){
 
     try{
         const { planName } = req.body;
@@ -98,7 +106,9 @@ app.post("/create-order", async function(req, res){
             receipt: "chronoai_" + Date.now(),
             notes: {
                 planName: planName,
-                product: "ChronoAI"
+                product: "ChronoAI",
+                userId: req.user._id.toString(),
+                userEmail: req.user.email
             }
         };
 
@@ -126,9 +136,10 @@ app.post("/create-order", async function(req, res){
 
 // =============================
 // RAZORPAY VERIFY PAYMENT
+// Protected: after payment success, update user plan in MongoDB
 // =============================
 
-app.post("/verify-payment", function(req, res){
+app.post("/verify-payment", protect, async function(req, res){
 
     try{
         const {
@@ -142,6 +153,13 @@ app.post("/verify-payment", function(req, res){
             return res.status(400).json({
                 success: false,
                 message: "Payment details are missing."
+            });
+        }
+
+        if(!plans[planName]){
+            return res.status(400).json({
+                success: false,
+                message: "Invalid plan selected."
             });
         }
 
@@ -161,11 +179,29 @@ app.post("/verify-payment", function(req, res){
             });
         }
 
+        const updatedUser = await User.findByIdAndUpdate(
+            req.user._id,
+            {
+                plan: planName,
+                paymentStatus: "Paid"
+            },
+            {
+                new: true
+            }
+        ).select("-password");
+
         res.json({
             success: true,
-            message: "Payment verified successfully.",
+            message: "Payment verified successfully. Plan updated.",
             planName: planName,
-            paymentId: razorpay_payment_id
+            paymentId: razorpay_payment_id,
+            user: {
+                id: updatedUser._id,
+                name: updatedUser.name,
+                email: updatedUser.email,
+                plan: updatedUser.plan,
+                paymentStatus: updatedUser.paymentStatus
+            }
         });
 
     }
