@@ -1126,27 +1126,86 @@ function closeUpgradePlan(){
 
 // =============================
 // REAL RAZORPAY PAYMENT SYSTEM
+// Connected to protected backend + MongoDB plan update
 // =============================
 
 const PAYMENT_BACKEND_URL = "http://localhost:5000";
 
+function getPaymentAuthHeaders(){
+    const token = localStorage.getItem("chronoToken");
+
+    if(!token){
+        showDashboardToast("Login session expired. Please login again.");
+
+        setTimeout(function(){
+            window.location.href = "login.html";
+        }, 900);
+
+        return null;
+    }
+
+    return {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token
+    };
+}
+
+function savePaidPlanFromBackend(verifyData, orderData){
+    const user = verifyData.user || {};
+
+    const finalPlan = user.plan || orderData.planName;
+    const finalPaymentStatus = user.paymentStatus || "Paid";
+
+    localStorage.setItem("chronoSelectedPlan", finalPlan);
+    localStorage.setItem("chronoPaymentStatus", finalPaymentStatus);
+
+    if(user.id){
+        localStorage.setItem("chronoUserId", user.id);
+    }
+
+    if(user.name){
+        localStorage.setItem("chronoUserName", user.name);
+        currentUserName = user.name;
+        updateUserName();
+    }
+
+    if(user.email){
+        localStorage.setItem("chronoUserEmail", user.email);
+    }
+
+    if(verifyData.paymentId){
+        localStorage.setItem("chronoPaymentId", verifyData.paymentId);
+    }
+
+    localStorage.setItem("chronoPaymentAmount", orderData.displayAmount || "");
+    localStorage.setItem("chronoPaymentDate", new Date().toLocaleString());
+
+    const settingsPlan = getEl("settingsPlan");
+
+    if(settingsPlan){
+        settingsPlan.textContent = finalPlan + " Plan";
+    }
+
+    loadSettings();
+    loadPaymentHistory();
+    applyPlanAccessControl();
+
+    if(typeof checkChronoAuth === "function"){
+        checkChronoAuth();
+    }
+}
+
 async function selectUpgradePlan(planName){
 
     if(planName === "Free"){
-
-        localStorage.setItem("chronoSelectedPlan", "Free");
-        location.reload();
-
-        const settingsPlan = getEl("settingsPlan");
-
-        if(settingsPlan){
-            settingsPlan.textContent = "Free Plan";
-        }
-
         closeUpgradePlan();
+        showDashboardToast("Free plan is default. Plan downgrade will be added later.");
+        return;
+    }
 
-        showDashboardToast("Free plan selected.");
+    const headers = getPaymentAuthHeaders();
 
+    if(!headers){
         return;
     }
 
@@ -1158,15 +1217,23 @@ async function selectUpgradePlan(planName){
 
         const orderResponse = await fetch(PAYMENT_BACKEND_URL + "/create-order", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
+            headers: headers,
             body: JSON.stringify({
                 planName: planName
             })
         });
 
         const orderData = await orderResponse.json();
+
+        if(orderResponse.status === 401){
+            showDashboardToast("Login session expired. Please login again.");
+
+            setTimeout(function(){
+                window.location.href = "login.html";
+            }, 900);
+
+            return;
+        }
 
         if(!orderData.success){
             showDashboardToast(orderData.message || "Unable to create payment order.");
@@ -1213,13 +1280,17 @@ function openRazorpayCheckout(orderData){
 
             showDashboardToast("Verifying payment...");
 
+            const headers = getPaymentAuthHeaders();
+
+            if(!headers){
+                return;
+            }
+
             try{
 
                 const verifyResponse = await fetch(PAYMENT_BACKEND_URL + "/verify-payment", {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
+                    headers: headers,
                     body: JSON.stringify({
                         razorpay_order_id: response.razorpay_order_id,
                         razorpay_payment_id: response.razorpay_payment_id,
@@ -1230,27 +1301,29 @@ function openRazorpayCheckout(orderData){
 
                 const verifyData = await verifyResponse.json();
 
+                if(verifyResponse.status === 401){
+                    showDashboardToast("Login session expired. Please login again.");
+
+                    setTimeout(function(){
+                        window.location.href = "login.html";
+                    }, 900);
+
+                    return;
+                }
+
                 if(verifyData.success){
 
-                    localStorage.setItem("chronoSelectedPlan", orderData.planName);
-                    localStorage.setItem("chronoPaymentStatus", "Paid");
-                    localStorage.setItem("chronoPaymentId", verifyData.paymentId);
-                    localStorage.setItem("chronoPaymentAmount", orderData.displayAmount);
-                    localStorage.setItem("chronoPaymentDate", new Date().toLocaleString());
-
-                    const settingsPlan = getEl("settingsPlan");
-
-                    if(settingsPlan){
-                        settingsPlan.textContent = orderData.planName + " Plan";
-                    }
-
-                    loadSettings();
+                    savePaidPlanFromBackend(verifyData, orderData);
 
                     showDashboardToast(orderData.planName + " plan activated successfully.");
 
+                    setTimeout(function(){
+                        window.location.reload();
+                    }, 1200);
+
                 }
                 else{
-                    showDashboardToast("Payment verification failed.");
+                    showDashboardToast(verifyData.message || "Payment verification failed.");
                 }
 
             }
