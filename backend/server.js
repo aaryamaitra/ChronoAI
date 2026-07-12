@@ -216,58 +216,7 @@ app.post("/verify-payment", protect, async function(req, res){
 
 });
 
-// =============================
-// DEV ONLY: MANUAL PLAN UPGRADE TEST
-// This is only for local development testing.
-// Remove before final deployment.
-// =============================
 
-app.post("/dev-upgrade-plan", protect, async function(req, res){
-
-    try{
-        const { planName } = req.body;
-
-        if(!["Free", "Pro", "Premium"].includes(planName)){
-            return res.status(400).json({
-                success: false,
-                message: "Invalid plan selected."
-            });
-        }
-
-        const updatedUser = await User.findByIdAndUpdate(
-            req.user._id,
-            {
-                plan: planName,
-                paymentStatus: planName === "Free" ? "Not Paid" : "Paid"
-            },
-            {
-                new: true
-            }
-        ).select("-password");
-
-        res.json({
-            success: true,
-            message: "Dev plan updated successfully.",
-            user: {
-                id: updatedUser._id,
-                name: updatedUser.name,
-                email: updatedUser.email,
-                plan: updatedUser.plan,
-                paymentStatus: updatedUser.paymentStatus
-            }
-        });
-
-    }
-    catch(error){
-        console.error("Dev upgrade error:", error);
-
-        res.status(500).json({
-            success: false,
-            message: "Unable to update dev plan."
-        });
-    }
-
-});
 
 // =============================
 // AI HEALTH CHECK
